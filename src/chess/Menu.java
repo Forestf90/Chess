@@ -1,11 +1,11 @@
 package chess;
 
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -38,7 +38,17 @@ public class Menu extends JFrame {
 		hot = new JButton("Hot-Seat");
 		lan = new JButton("LAN");
 		ai = new JButton("AI");
-
+		
+		
+		hot.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e)
+		    {
+		        new GameFrame();
+		        setVisible(false);
+		        dispose();
+		    }
+	  });
 		
 		menuPanel.add(name ,c);
 		menuPanel.add(hot ,c);
