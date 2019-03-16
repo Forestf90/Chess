@@ -29,13 +29,13 @@ public abstract class Chessman {
 			System.err.println("Error");
 			e.printStackTrace();
 		}
-		int spriteNum=0;
+		int spriteNumX=0;
+		int spriteNumY=0;
+		if(this instanceof Pawn) spriteNumX=5;
 		
-		if(this instanceof Pawn) spriteNum=0;
+		if(color==SideColor.BLACK) spriteNumY+=GamePanel.SQUARE_SIZE;
 		
-		if(color==SideColor.BLACK) spriteNum+=4;
-		
-		img = sprite.getSubimage(spriteNum*GamePanel.SQUARE_SIZE, 0,
+		img = sprite.getSubimage(spriteNumX*GamePanel.SQUARE_SIZE, spriteNumY,
 				GamePanel.SQUARE_SIZE, GamePanel.SQUARE_SIZE);
 	}
 }

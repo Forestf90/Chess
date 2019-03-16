@@ -31,6 +31,15 @@ public class GamePanel extends JPanel{
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.drawImage(boardImg , 0 ,0 ,8*SQUARE_SIZE,8*SQUARE_SIZE , null);
 		
+		for(int i=0 ; i<piecesBoard.length ;i++) {
+			for(int j=0 ; j<piecesBoard[i].length;j++) {
+				if(piecesBoard[i][j]==null) continue;
+				else {
+					g.drawImage(piecesBoard[i][j].img,  i*SQUARE_SIZE,
+							j*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE , null);
+				}
+			}
+		}
 	}
 	
 	private void drawBoard()
@@ -52,5 +61,12 @@ public class GamePanel extends JPanel{
 	}
 	private void generatePieces() {
 		
+		for(int i=0 ; i<8 ; i++) {
+			Pawn tempWhite = new Pawn(SideColor.WHITE ,i ,6);
+			Pawn tempBlack = new Pawn(SideColor.BLACK ,i ,1);
+			
+			piecesBoard[i][6] =tempWhite;
+			piecesBoard[i][1] =tempBlack;
+		}
 	}
 }
