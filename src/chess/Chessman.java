@@ -32,6 +32,7 @@ public abstract class Chessman {
 		int spriteNumX=0;
 		int spriteNumY=0;
 		if(this instanceof Pawn) spriteNumX=5;
+		if(this instanceof Rook) spriteNumX=4;
 		
 		if(color==SideColor.BLACK) spriteNumY+=GamePanel.SQUARE_SIZE;
 		

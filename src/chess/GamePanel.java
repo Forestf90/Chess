@@ -24,6 +24,7 @@ public class GamePanel extends JPanel{
 		
 		piecesBoard = new Chessman[8][8];
 		generatePieces();
+		generateRooks();
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -69,4 +70,18 @@ public class GamePanel extends JPanel{
 			piecesBoard[i][1] =tempBlack;
 		}
 	}
+	
+	private void generateRooks() {
+		
+			Rook tempWhite1 = new Rook(SideColor.WHITE, 0, 7);
+			Rook tempWhite2 = new Rook(SideColor.WHITE, 7, 7);
+			Rook tempBlack1 = new Rook(SideColor.BLACK, 0, 0);
+			Rook tempBlack2 = new Rook(SideColor.BLACK, 8, 0);
+			
+			piecesBoard[0][7] = tempWhite1;
+			piecesBoard[7][7] = tempWhite2;
+			piecesBoard[0][0] = tempBlack1;
+			piecesBoard[7][0] = tempBlack2;		
+	}
+	
 }
