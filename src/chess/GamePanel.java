@@ -25,6 +25,10 @@ public class GamePanel extends JPanel{
 		piecesBoard = new Chessman[8][8];
 		generatePieces();
 		generateRooks();
+		generateKnights();
+		generateBishops();
+		generateQueen();
+		generateKing();
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -73,15 +77,61 @@ public class GamePanel extends JPanel{
 	
 	private void generateRooks() {
 		
-			Rook tempWhite1 = new Rook(SideColor.WHITE, 0, 7);
-			Rook tempWhite2 = new Rook(SideColor.WHITE, 7, 7);
-			Rook tempBlack1 = new Rook(SideColor.BLACK, 0, 0);
-			Rook tempBlack2 = new Rook(SideColor.BLACK, 8, 0);
+		Rook tempWhite1 = new Rook(SideColor.WHITE, 0, 7);
+		Rook tempWhite2 = new Rook(SideColor.WHITE, 7, 7);
+		Rook tempBlack1 = new Rook(SideColor.BLACK, 0, 0);
+		Rook tempBlack2 = new Rook(SideColor.BLACK, 7, 0);
 			
-			piecesBoard[0][7] = tempWhite1;
-			piecesBoard[7][7] = tempWhite2;
-			piecesBoard[0][0] = tempBlack1;
-			piecesBoard[7][0] = tempBlack2;		
+		piecesBoard[0][7] = tempWhite1;
+		piecesBoard[7][7] = tempWhite2;
+		piecesBoard[0][0] = tempBlack1;
+		piecesBoard[7][0] = tempBlack2;		
+	}
+	
+	private void generateKnights() {
+		
+		Knight tempWhite1 = new Knight(SideColor.WHITE, 1, 7);
+		Knight tempWhite2 = new Knight(SideColor.WHITE, 6, 7);
+		Knight tempBlack1 = new Knight(SideColor.BLACK, 1, 0);
+		Knight tempBlack2 = new Knight(SideColor.BLACK, 6, 0);
+		
+		piecesBoard[1][7] = tempWhite1;
+		piecesBoard[6][7] = tempWhite2;
+		piecesBoard[1][0] = tempBlack1;
+		piecesBoard[6][0] = tempBlack2;		
+	}
+	
+	private void generateBishops() {
+			
+		Bishop tempWhite1 = new Bishop(SideColor.WHITE, 2, 7);
+		Bishop tempWhite2 = new Bishop(SideColor.WHITE, 5, 7);
+		Bishop tempBlack1 = new Bishop(SideColor.BLACK, 2, 0);
+		Bishop tempBlack2 = new Bishop(SideColor.BLACK, 5, 0);
+			
+		piecesBoard[2][7] = tempWhite1;
+		piecesBoard[5][7] = tempWhite2;
+		piecesBoard[2][0] = tempBlack1;
+		piecesBoard[5][0] = tempBlack2;		
+	}
+	
+	private void generateQueen() {
+		
+		Queen tempWhite = new Queen(SideColor.WHITE, 3, 7);
+		Queen tempBlack = new Queen(SideColor.BLACK, 3, 0);
+		
+		piecesBoard[3][7] = tempWhite;
+		piecesBoard[3][0] = tempBlack;
+				
+	}
+	
+private void generateKing() {
+		
+		King tempWhite = new King(SideColor.WHITE, 4, 7);
+		King tempBlack = new King(SideColor.BLACK, 4, 0);
+		
+		piecesBoard[4][7] = tempWhite;
+		piecesBoard[4][0] = tempBlack;
+				
 	}
 	
 }
