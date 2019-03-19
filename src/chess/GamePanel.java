@@ -52,7 +52,7 @@ public class GamePanel extends JPanel{
 				}
 			}
 		}
-		
+		g.setColor(Color.RED);
 		for(Position ch: possibleMoves) {
 			g.fillRect(ch.x*SQUARE_SIZE, ch.y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
 		}
@@ -148,7 +148,9 @@ public void MouseListner() {
 	 addMouseListener(new MouseAdapter(){ 
          public void mousePressed(MouseEvent me) { 
            //blokowanie(me.getX() ,me.getY());
-           piecesBoard[me.getX()/8][me.getY()/8].GetMoves(piecesBoard);
+        	 int tempX =me.getX()/SQUARE_SIZE;
+        	 int tempY =me.getY()/SQUARE_SIZE;
+           possibleMoves =piecesBoard[tempX][tempY].GetMoves(piecesBoard);
            repaint();
          }
        }); 
