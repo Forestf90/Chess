@@ -5,7 +5,11 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -13,7 +17,7 @@ public class GamePanel extends JPanel{
 	
 	protected BufferedImage boardImg;
 	static final int SQUARE_SIZE =64;
-	
+	ArrayList<Position> possibleMoves;
 	public Chessman[][] piecesBoard;
 	
 	
@@ -23,12 +27,15 @@ public class GamePanel extends JPanel{
 		this.setPreferredSize(new Dimension(8*SQUARE_SIZE, 8*SQUARE_SIZE));
 		
 		piecesBoard = new Chessman[8][8];
+		possibleMoves=new ArrayList<Position>();
 		generatePieces();
 		generateRooks();
 		generateKnights();
 		generateBishops();
 		generateQueen();
 		generateKing();
+		
+		MouseListner();
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -44,6 +51,10 @@ public class GamePanel extends JPanel{
 							j*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE , null);
 				}
 			}
+		}
+		
+		for(Position ch: possibleMoves) {
+			g.fillRect(ch.x*SQUARE_SIZE, ch.y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
 		}
 	}
 	
@@ -133,5 +144,30 @@ private void generateKing() {
 		piecesBoard[4][0] = tempBlack;
 				
 	}
+public void MouseListner() {
+	 addMouseListener(new MouseAdapter(){ 
+         public void mousePressed(MouseEvent me) { 
+           //blokowanie(me.getX() ,me.getY());
+           piecesBoard[me.getX()/8][me.getY()/8].GetMoves(piecesBoard);
+           repaint();
+         }
+       }); 
+	 
+	 addMouseMotionListener(new MouseMotionListener() {
+		 @Override
+		public void mouseMoved(MouseEvent me) {
+			// focus(me.getX() ,me.getY());	
+			
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		 
+		 
+	 });
 	
+}
 }
