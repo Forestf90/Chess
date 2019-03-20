@@ -3,6 +3,7 @@ package chess;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -14,8 +15,7 @@ public abstract class Chessman {
 	
 	public BufferedImage img;
 	SideColor color;
-	public int posX;
-	public int posY;
+
 	
 	protected void loadImage() {
 		
@@ -44,4 +44,6 @@ public abstract class Chessman {
 		img = sprite.getSubimage(spriteNumX*GamePanel.SQUARE_SIZE, spriteNumY,
 				GamePanel.SQUARE_SIZE, GamePanel.SQUARE_SIZE);
 	}
+	
+	public abstract ArrayList<Position> GetMoves(Chessman[][] board);
 }
