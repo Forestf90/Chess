@@ -6,7 +6,6 @@ import java.util.ArrayList;
 public class Pawn extends Chessman {
 
 	public boolean startPosition= true;
-	public Position pos;
 	public Pawn(SideColor col , int x , int y) {
 		color =col;
 		pos= new Position(x ,y);

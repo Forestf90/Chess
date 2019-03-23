@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Rook extends Chessman {
 
-	public Position pos;
 	public Rook(SideColor col , int x , int y) {
 		color =col;
 		pos= new Position(x ,y);
