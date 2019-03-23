@@ -20,6 +20,7 @@ public class GamePanel extends JPanel{
 	static final int SQUARE_SIZE =64;
 	ArrayList<Position> possibleMoves;
 	Chessman selected;
+	Position focus;
 	public Chessman[][] piecesBoard;
 	
 	
@@ -30,6 +31,7 @@ public class GamePanel extends JPanel{
 		
 		piecesBoard = new Chessman[8][8];
 		possibleMoves=new ArrayList<Position>();
+		focus = new Position(0,0);
 		
 		generatePieces();
 		MouseListner();
@@ -38,8 +40,10 @@ public class GamePanel extends JPanel{
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.setColor(new Color(128,128,128,196));
 		g.drawImage(boardImg , 0 ,0 ,8*SQUARE_SIZE,8*SQUARE_SIZE , null);
 		
+		g.fillRect(focus.x*SQUARE_SIZE, focus.y*SQUARE_SIZE,SQUARE_SIZE , SQUARE_SIZE);
 		for(int i=0 ; i<piecesBoard.length ;i++) {
 			for(int j=0 ; j<piecesBoard[i].length;j++) {
 				if(piecesBoard[i][j]==null) continue;
@@ -150,8 +154,9 @@ public void MouseListner() {
 	 addMouseMotionListener(new MouseMotionListener() {
 		 @Override
 		public void mouseMoved(MouseEvent me) {
-			// focus(me.getX() ,me.getY());	
-			
+        	 focus.x=me.getX()/SQUARE_SIZE;
+        	 focus.y=me.getY()/SQUARE_SIZE;
+        	 repaint();
 		}
 
 		@Override
