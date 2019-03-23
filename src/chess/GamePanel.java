@@ -55,9 +55,11 @@ public class GamePanel extends JPanel{
 			g.drawRect(selected.pos.x*SQUARE_SIZE, selected.pos.y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE );
 		}
 		for(Position ch: possibleMoves) {
-			if(piecesBoard[ch.x][ch.y]!= null &&piecesBoard[ch.x][ch.y].color.equals(selected.color)) {
-				g.setColor(new Color(255,0,0,  192));
-				g.drawRect(ch.x*SQUARE_SIZE, ch.y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE );
+			if(piecesBoard[ch.x][ch.y]!= null) {
+				if(piecesBoard[ch.x][ch.y].color!=selected.color) {
+					g.setColor(new Color(255,0,0,  192));
+					g.drawRect(ch.x*SQUARE_SIZE, ch.y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE );
+				}
 			}
 			else {
 				g.setColor(new Color(0,255,0,  192));
@@ -122,9 +124,26 @@ public void MouseListner() {
            //blokowanie(me.getX() ,me.getY());
         	 int tempX =me.getX()/SQUARE_SIZE;
         	 int tempY =me.getY()/SQUARE_SIZE;
-        	 selected =piecesBoard[tempX][tempY];
-           possibleMoves =selected.GetMoves(piecesBoard);
-           repaint();
+        	 if(piecesBoard[tempX][tempY]==null && selected==null) return;
+        	 else if(selected==null) {
+            	 selected =piecesBoard[tempX][tempY];
+                 possibleMoves =selected.GetMoves(piecesBoard);
+                 repaint();
+        	 }else if(selected!=null) {
+        		 if(piecesBoard[tempX][tempY]!=null && piecesBoard[tempX][tempY].color== selected.color) {
+                	 selected =piecesBoard[tempX][tempY];
+                     possibleMoves =selected.GetMoves(piecesBoard);
+                     repaint();
+        		 }else {
+        			 
+        			 moveChessman(new Position(tempX ,tempY));
+        			 selected=null;
+        			 possibleMoves.clear();
+        			 repaint();
+        		 }
+        		 
+        	 }
+           
          }
        }); 
 	 
@@ -141,8 +160,37 @@ public void MouseListner() {
 			
 		}
 		 
-		 
 	 });
 	
 }
+
+public void moveChessman(Position newPosition) {
+	if(piecesBoard[newPosition.x][newPosition.y]!=null) {
+		//piecesBoard[newPosition.x][newPosition.y]=null;
+		//TODO Add pieces to hit list
+	}
+	boolean contains= false;
+	
+	for(Position m : possibleMoves) {
+		
+		if(m.x==newPosition.x && m.y==newPosition.y) {
+			contains=true;
+			break;
+		}
+	}
+
+	if(contains) {
+		piecesBoard[newPosition.x][newPosition.y]=selected;
+		piecesBoard[selected.pos.x][selected.pos.y] =null;
+		selected.pos=newPosition;
+		if(selected instanceof Pawn) {
+			((Pawn) selected).startPosition=false;
+			if(selected.pos.y==7 || selected.pos.y==0) {
+				//TODO zamiana pionka na figure
+			}
+		}
+	}else return;
+
+}
+
 }
