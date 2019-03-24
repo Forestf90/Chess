@@ -15,7 +15,9 @@ public class King extends Chessman {
 		
 		ArrayList<Position> moves = new ArrayList<Position>(); ;
 		
-		
+		if(board[pos.x+1][pos.y+2] == null)
+			moves.add(new Position(this.pos.x+1 ,this.pos.y+2));
+								
 		return moves;
 		
 	}
