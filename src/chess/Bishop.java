@@ -79,7 +79,7 @@ public class Bishop extends Chessman {
 		//SW
 		i = 1;
 		
-		while(this.pos.x-i <= 7 && this.pos.y+i <=7 ) {
+		while(this.pos.x-i >= 0 && this.pos.y+i <=7 ) {
 			
 			if(board[pos.x-i][pos.y+i] == null){
 				moves.add(new Position(this.pos.x-i ,this.pos.y+i));

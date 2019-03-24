@@ -19,9 +19,7 @@ public ArrayList<Position> GetMoves(Chessman[][] board) {
 		int movesRight = 7 - this.pos.x;
 		int movesLeft = this.pos.x;
 		int movesUp = this.pos.y;
-		int movesDown = 7 - this.pos.y;
-		
-			
+		int movesDown = 7 - this.pos.y;		
 		int i = 0;
 		
 		while(movesUp>0 ) {
@@ -42,13 +40,10 @@ public ArrayList<Position> GetMoves(Chessman[][] board) {
 				else 
 					break;				
 			}		
-			
 		}
-		
-		
+				
 		i = 0;
-		
-		
+			
 		while(movesDown>0 ) {
 			
 			movesDown--;
@@ -66,11 +61,9 @@ public ArrayList<Position> GetMoves(Chessman[][] board) {
 					break;				
 			}		
 		}
-		
-		
+				
 		i = 0;
-		
-		
+			
 		while(movesLeft>0 ) {
 			
 			movesLeft--;
@@ -88,11 +81,9 @@ public ArrayList<Position> GetMoves(Chessman[][] board) {
 					break;				
 			}		
 		}
-		
-		
+				
 		i = 0;
-		
-		
+				
 		while(movesRight>0 ) {
 			
 			movesRight--;
@@ -110,7 +101,6 @@ public ArrayList<Position> GetMoves(Chessman[][] board) {
 			}		
 		}
 		
-		return moves;
-		
+		return moves;		
 	}
 }
