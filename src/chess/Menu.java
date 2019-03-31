@@ -29,7 +29,7 @@ public class Menu extends JFrame {
 
         c.weightx = 1;
         c.weighty = .25;
-        c.insets = new Insets(5, 0, 5, 0);
+        c.insets = new Insets(15, 40, 15, 40);
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.fill = GridBagConstraints.BOTH;
 		this.add(menuPanel);
@@ -44,7 +44,7 @@ public class Menu extends JFrame {
 		    @Override
 		    public void actionPerformed(ActionEvent e)
 		    {
-		        new GameFrame();
+		        new GameFrame(null , null);
 		        setVisible(false);
 		        dispose();
 		    }
@@ -57,6 +57,7 @@ public class Menu extends JFrame {
 		
 		
 		this.pack();
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 
 

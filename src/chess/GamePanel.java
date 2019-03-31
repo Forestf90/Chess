@@ -31,6 +31,8 @@ public class GamePanel extends JPanel{
 	Position focus;
 	public Chessman[][] piecesBoard;
 	
+	boolean whiteMove;
+	
 	
 	public GamePanel() {
 		boardImg = new BufferedImage(8*SQUARE_SIZE ,8*SQUARE_SIZE ,BufferedImage.TYPE_INT_ARGB);
@@ -40,6 +42,7 @@ public class GamePanel extends JPanel{
 		piecesBoard = new Chessman[8][8];
 		possibleMoves=new ArrayList<Position>();
 		focus = new Position(0,0);
+		whiteMove= true;
 		
 		generatePieces();
 		MouseListner();
@@ -139,6 +142,14 @@ public void MouseListner() {
         	 if(piecesBoard[tempX][tempY]==null && selected==null) return;
         	 else if(selected==null) {
             	 selected =piecesBoard[tempX][tempY];
+            	 if(selected.color==SideColor.WHITE && !whiteMove) {
+            		 selected=null;
+            		 return;
+            	 }
+            	 else if(selected.color==SideColor.BLACK && whiteMove) {
+            		 selected=null;
+            		 return;
+            	 }
                  possibleMoves =selected.GetMoves(piecesBoard);
                  repaint();
         	 }else if(selected!=null) {
@@ -202,6 +213,7 @@ public void moveChessman(Position newPosition) {
 				//TODO zamiana pionka na figure
 			}
 		}
+		whiteMove^=true;
 	}else return;
 
 }

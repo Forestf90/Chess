@@ -2,10 +2,13 @@ package chess;
 
 import javax.swing.JFrame;
 
+import chess.AI.AI;
+import chess.LAN.Server;
+
 public class GameFrame extends JFrame {
 
 	GamePanel GamePanelObj ;
-	public GameFrame() {
+	public GameFrame(Server  server , AI Ai)throws IllegalArgumentException {
 		super("Chess");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -13,6 +16,7 @@ public class GameFrame extends JFrame {
 		this.add(GamePanelObj);
 		
 		this.pack();
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
 }
