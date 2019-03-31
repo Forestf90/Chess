@@ -14,6 +14,14 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import chess.pieces.Bishop;
+import chess.pieces.Chessman;
+import chess.pieces.King;
+import chess.pieces.Knight;
+import chess.pieces.Pawn;
+import chess.pieces.Queen;
+import chess.pieces.Rook;
+
 public class GamePanel extends JPanel{
 	
 	protected BufferedImage boardImg;

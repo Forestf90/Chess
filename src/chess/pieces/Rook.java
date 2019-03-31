@@ -1,6 +1,9 @@
-package chess;
+package chess.pieces;
 
 import java.util.ArrayList;
+
+import chess.Position;
+import chess.SideColor;
 
 public class Rook extends Chessman {
 

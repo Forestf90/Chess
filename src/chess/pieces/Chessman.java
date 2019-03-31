@@ -1,4 +1,4 @@
-package chess;
+package chess.pieces;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import chess.Position;
 import chess.SideColor;
 
 public abstract class Chessman {
@@ -14,7 +15,7 @@ public abstract class Chessman {
 	private BufferedImage sprite;
 	
 	public BufferedImage img;
-	SideColor color;
+	public SideColor color;
 
 	public Position pos;
 	
@@ -40,10 +41,10 @@ public abstract class Chessman {
 		if(this instanceof Queen) spriteNumX=1;
 		if(this instanceof King) spriteNumX=0;
 		
-		if(color==SideColor.BLACK) spriteNumY+=GamePanel.SQUARE_SIZE;
+		if(color==SideColor.BLACK) spriteNumY+=64;
 		
-		img = sprite.getSubimage(spriteNumX*GamePanel.SQUARE_SIZE, spriteNumY,
-				GamePanel.SQUARE_SIZE, GamePanel.SQUARE_SIZE);
+		img = sprite.getSubimage(spriteNumX*64, spriteNumY,
+				64, 64);
 	}
 	
 	public abstract ArrayList<Position> GetMoves(Chessman[][] board);
