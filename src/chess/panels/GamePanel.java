@@ -1,4 +1,4 @@
-package chess;
+package chess.panels;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import chess.Position;
+import chess.SideColor;
 import chess.pieces.Bishop;
 import chess.pieces.Chessman;
 import chess.pieces.King;
@@ -22,7 +24,7 @@ import chess.pieces.Pawn;
 import chess.pieces.Queen;
 import chess.pieces.Rook;
 
-public class GamePanel extends JPanel{
+public abstract class GamePanel extends JPanel{
 	
 	protected BufferedImage boardImg;
 	static final int SQUARE_SIZE =64;
@@ -33,6 +35,8 @@ public class GamePanel extends JPanel{
 	
 	boolean whiteMove;
 	
+	
+	abstract void opponentTurn();
 	
 	public GamePanel() {
 		boardImg = new BufferedImage(8*SQUARE_SIZE ,8*SQUARE_SIZE ,BufferedImage.TYPE_INT_ARGB);
@@ -78,7 +82,8 @@ public class GamePanel extends JPanel{
 			}
 			else {
 				g.setColor(new Color(0,255,0,  192));
-				g.fillOval(ch.x*SQUARE_SIZE, ch.y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+				g.fillOval(ch.x*SQUARE_SIZE+SQUARE_SIZE/4, ch.y*SQUARE_SIZE+SQUARE_SIZE/4,
+						SQUARE_SIZE/2, SQUARE_SIZE/2);
 				
 			}
 			
@@ -213,9 +218,16 @@ public void moveChessman(Position newPosition) {
 				//TODO zamiana pionka na figure
 			}
 		}
-		whiteMove^=true;
+		opponentTurn();
+		
 	}else return;
 
+}
+
+public ArrayList<Position> getAllMoves(SideColor col){
+	ArrayList<Position> moves =new ArrayList();
+	 //TODO i elo
+	return moves;
 }
 
 }

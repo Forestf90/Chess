@@ -11,6 +11,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import chess.panels.GamePanel;
+import chess.panels.GamePanelHot;
+
 
 public class Menu extends JFrame {
 
@@ -42,9 +45,8 @@ public class Menu extends JFrame {
 		
 		hot.addActionListener(new ActionListener() {
 		    @Override
-		    public void actionPerformed(ActionEvent e)
-		    {
-		        new GameFrame(null , null);
+		    public void actionPerformed(ActionEvent e) {
+		        new GameFrame(new GamePanelHot());
 		        setVisible(false);
 		        dispose();
 		    }
