@@ -1,4 +1,4 @@
-package chess;
+package chess.panels;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -14,15 +14,29 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-public class GamePanel extends JPanel{
+import chess.Position;
+import chess.SideColor;
+import chess.pieces.Bishop;
+import chess.pieces.Chessman;
+import chess.pieces.King;
+import chess.pieces.Knight;
+import chess.pieces.Pawn;
+import chess.pieces.Queen;
+import chess.pieces.Rook;
+
+public abstract class GamePanel extends JPanel{
 	
 	protected BufferedImage boardImg;
 	static final int SQUARE_SIZE =64;
 	ArrayList<Position> possibleMoves;
 	Chessman selected;
-	Position focus;
+	protected Position focus;
 	public Chessman[][] piecesBoard;
 	
+	public boolean whiteMove;
+	public boolean enabled;
+	
+	abstract void oponentTurn();
 	
 	public GamePanel() {
 		boardImg = new BufferedImage(8*SQUARE_SIZE ,8*SQUARE_SIZE ,BufferedImage.TYPE_INT_ARGB);
@@ -32,6 +46,9 @@ public class GamePanel extends JPanel{
 		piecesBoard = new Chessman[8][8];
 		possibleMoves=new ArrayList<Position>();
 		focus = new Position(0,0);
+		whiteMove= true;
+		enabled =true;
+		
 		
 		generatePieces();
 		MouseListner();
@@ -67,7 +84,8 @@ public class GamePanel extends JPanel{
 			}
 			else {
 				g.setColor(new Color(0,255,0,  192));
-				g.fillOval(ch.x*SQUARE_SIZE, ch.y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+				g.fillOval(ch.x*SQUARE_SIZE+SQUARE_SIZE/4, ch.y*SQUARE_SIZE+SQUARE_SIZE/4,
+						SQUARE_SIZE/2, SQUARE_SIZE/2);
 				
 			}
 			
@@ -128,9 +146,17 @@ public void MouseListner() {
            //blokowanie(me.getX() ,me.getY());
         	 int tempX =me.getX()/SQUARE_SIZE;
         	 int tempY =me.getY()/SQUARE_SIZE;
-        	 if(piecesBoard[tempX][tempY]==null && selected==null) return;
+        	 if((piecesBoard[tempX][tempY]==null && selected==null) || !enabled) return;
         	 else if(selected==null) {
             	 selected =piecesBoard[tempX][tempY];
+            	 if(selected.color==SideColor.WHITE && !whiteMove) {
+            		 selected=null;
+            		 return;
+            	 }
+            	 else if(selected.color==SideColor.BLACK && whiteMove) {
+            		 selected=null;
+            		 return;
+            	 }
                  possibleMoves =selected.GetMoves(piecesBoard);
                  repaint();
         	 }else if(selected!=null) {
@@ -194,8 +220,16 @@ public void moveChessman(Position newPosition) {
 				//TODO zamiana pionka na figure
 			}
 		}
+		oponentTurn();
+		
 	}else return;
 
+}
+
+public ArrayList<Position> getAllMoves(SideColor col){
+	ArrayList<Position> moves =new ArrayList<Position>();
+	 //TODO i elo
+	return moves;
 }
 
 }

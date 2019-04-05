@@ -2,17 +2,20 @@ package chess;
 
 import javax.swing.JFrame;
 
+import chess.panels.GamePanel;
+
+
 public class GameFrame extends JFrame {
 
-	GamePanel GamePanelObj ;
-	public GameFrame() {
+
+	public GameFrame(GamePanel gamePanel){
 		super("Chess");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		GamePanelObj = new GamePanel();
-		this.add(GamePanelObj);
+		this.add(gamePanel);
 		
 		this.pack();
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
 }

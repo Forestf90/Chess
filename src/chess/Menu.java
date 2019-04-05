@@ -11,6 +11,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import chess.panels.GamePanel;
+import chess.panels.GamePanelAI;
+import chess.panels.GamePanelHot;
+import chess.panels.GamePanelLAN;
+
 
 public class Menu extends JFrame {
 
@@ -29,7 +34,7 @@ public class Menu extends JFrame {
 
         c.weightx = 1;
         c.weighty = .25;
-        c.insets = new Insets(5, 0, 5, 0);
+        c.insets = new Insets(15, 40, 15, 40);
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.fill = GridBagConstraints.BOTH;
 		this.add(menuPanel);
@@ -42,9 +47,26 @@ public class Menu extends JFrame {
 		
 		hot.addActionListener(new ActionListener() {
 		    @Override
-		    public void actionPerformed(ActionEvent e)
-		    {
-		        new GameFrame();
+		    public void actionPerformed(ActionEvent e) {
+		        new GameFrame(new GamePanelHot());
+		        setVisible(false);
+		        dispose();
+		    }
+	  });
+		
+		lan.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        new GameFrame(new GamePanelLAN());
+		        setVisible(false);
+		        dispose();
+		    }
+	  });
+		
+		ai.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        new GameFrame(new GamePanelAI());
 		        setVisible(false);
 		        dispose();
 		    }
@@ -57,6 +79,7 @@ public class Menu extends JFrame {
 		
 		
 		this.pack();
+		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 
 
