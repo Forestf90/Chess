@@ -12,7 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import chess.panels.GamePanel;
+import chess.panels.GamePanelAI;
 import chess.panels.GamePanelHot;
+import chess.panels.GamePanelLAN;
 
 
 public class Menu extends JFrame {
@@ -47,6 +49,24 @@ public class Menu extends JFrame {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 		        new GameFrame(new GamePanelHot());
+		        setVisible(false);
+		        dispose();
+		    }
+	  });
+		
+		lan.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        new GameFrame(new GamePanelLAN());
+		        setVisible(false);
+		        dispose();
+		    }
+	  });
+		
+		ai.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        new GameFrame(new GamePanelAI());
 		        setVisible(false);
 		        dispose();
 		    }

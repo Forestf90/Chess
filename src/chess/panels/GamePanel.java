@@ -30,13 +30,13 @@ public abstract class GamePanel extends JPanel{
 	static final int SQUARE_SIZE =64;
 	ArrayList<Position> possibleMoves;
 	Chessman selected;
-	Position focus;
+	protected Position focus;
 	public Chessman[][] piecesBoard;
 	
-	boolean whiteMove;
+	public boolean whiteMove;
+	public boolean enabled;
 	
-	
-	abstract void opponentTurn();
+	abstract void oponentTurn();
 	
 	public GamePanel() {
 		boardImg = new BufferedImage(8*SQUARE_SIZE ,8*SQUARE_SIZE ,BufferedImage.TYPE_INT_ARGB);
@@ -47,6 +47,8 @@ public abstract class GamePanel extends JPanel{
 		possibleMoves=new ArrayList<Position>();
 		focus = new Position(0,0);
 		whiteMove= true;
+		enabled =true;
+		
 		
 		generatePieces();
 		MouseListner();
@@ -144,7 +146,7 @@ public void MouseListner() {
            //blokowanie(me.getX() ,me.getY());
         	 int tempX =me.getX()/SQUARE_SIZE;
         	 int tempY =me.getY()/SQUARE_SIZE;
-        	 if(piecesBoard[tempX][tempY]==null && selected==null) return;
+        	 if((piecesBoard[tempX][tempY]==null && selected==null) || !enabled) return;
         	 else if(selected==null) {
             	 selected =piecesBoard[tempX][tempY];
             	 if(selected.color==SideColor.WHITE && !whiteMove) {
@@ -218,14 +220,14 @@ public void moveChessman(Position newPosition) {
 				//TODO zamiana pionka na figure
 			}
 		}
-		opponentTurn();
+		oponentTurn();
 		
 	}else return;
 
 }
 
 public ArrayList<Position> getAllMoves(SideColor col){
-	ArrayList<Position> moves =new ArrayList();
+	ArrayList<Position> moves =new ArrayList<Position>();
 	 //TODO i elo
 	return moves;
 }

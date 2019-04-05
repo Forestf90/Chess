@@ -3,9 +3,9 @@ package chess.panels;
 public class GamePanelLAN extends GamePanel {
 
 	@Override
-	void opponentTurn() {
+	void oponentTurn() {
 		// TODO Auto-generated method stub
-		
+		enabled=false;
 	}
 
 }
