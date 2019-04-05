@@ -21,9 +21,10 @@ public class GamePanelAI extends GamePanel{
 	        else if (response == JOptionPane.YES_OPTION) {
 	        	
 	    } 
-//	        else if (response == JOptionPane.CLOSED_OPTION) {
-//	            
-//	    }
+	        else if (response == JOptionPane.CLOSED_OPTION) {
+	            //nie wiem czy to zablokowac czy nie bo default choose jest ustawione na white
+	        	//wiec można uznać ze zamkniecie okna równa sie zaakceptowaniu defaultowej opcji
+	    }
 	}
 	@Override
 	void oponentTurn() {
