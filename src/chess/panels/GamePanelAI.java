@@ -1,6 +1,13 @@
 package chess.panels;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import javax.swing.JOptionPane;
+
+import chess.Position;
+import chess.SideColor;
+import chess.pieces.Chessman;
 
 public class GamePanelAI extends GamePanel{
 
@@ -32,5 +39,21 @@ public class GamePanelAI extends GamePanel{
 		enabled= false;
 		
 	}
+	public static int getRandom(int[] array) {
+	    int rnd = new Random().nextInt(array.length);
+	    return array[rnd];
+	}
+	
+	void AI(SideColor col) {
+		if(whiteMove == false)
+		{
+						
+			ArrayList<Position> newPosition = getAllMoves(SideColor.BLACK);
+			int random = new Random().nextInt(newPosition.size());
+			moveChessman(newPosition.get(random));
+		}
+		
+	}
+	
 
 }
