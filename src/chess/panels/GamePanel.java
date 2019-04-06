@@ -228,18 +228,16 @@ public void moveChessman(Position newPosition) {
 
 public ArrayList<Position> getAllMoves(SideColor col){
 	ArrayList<Position> moves =new ArrayList<Position>();
-	 //TODO i elo
+
+	SideColor SideColor = col;
 	
-	for(int i = 0; i >=7; i++){
-		for(int j = 0; j >=7; j++) {
-			if(whiteMove == false && piecesBoard[i][j].color == SideColor.BLACK )
+	for(int i = 0; i <=7; i++){
+		for(int j = 0; j <=7; j++) {
+			if(piecesBoard[i][j] != null)
 			{				
+				if(piecesBoard[i][j].color == SideColor)
 				moves.addAll(piecesBoard[i][j].GetMoves(piecesBoard));
-			}
-			else if(whiteMove == true && piecesBoard[i][j].color == SideColor.WHITE )
-			{				
-				moves.addAll(piecesBoard[i][j].GetMoves(piecesBoard));
-			}
+			}			
 		}
 	}
 	return moves;

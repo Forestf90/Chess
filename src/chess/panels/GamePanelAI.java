@@ -22,8 +22,9 @@ public class GamePanelAI extends GamePanel{
 		
 		
 	    if (response == JOptionPane.NO_OPTION) {
-	    	whiteMove =false;
+	    	
             oponentTurn();
+            
 	    } 
 	        else if (response == JOptionPane.YES_OPTION) {
 	        	
@@ -36,23 +37,60 @@ public class GamePanelAI extends GamePanel{
 	@Override
 	void oponentTurn() {
 		// TODO Auto-generated method stub
-		enabled= false;
+		
+		AI(SideColor.BLACK);
+		whiteMove^=false;
 		
 	}
+	
 	public static int getRandom(int[] array) {
 	    int rnd = new Random().nextInt(array.length);
 	    return array[rnd];
 	}
 	
 	void AI(SideColor col) {
-		if(whiteMove == false)
-		{
-						
-			ArrayList<Position> newPosition = getAllMoves(SideColor.BLACK);
-			int random = new Random().nextInt(newPosition.size());
-			moveChessman(newPosition.get(random));
+							
+		ArrayList<Position> allMovesList = getAllMoves(SideColor.BLACK);
+		
+		ArrayList<Position> pieceMoves = new ArrayList<Position>();
+		
+		
+		Position bestposition = new Position(0,0);;
+		Position oldposition = new Position(0,0);;
+		int max = 0;
+		int random = 0;
+		int movescount=0;
+		//czym sie rusze
+		for(int i = 0; i <=7; i++){
+			for(int j = 0; j <=7; j++) {
+				if(piecesBoard[i][j] != null){				
+					if(piecesBoard[i][j].color == SideColor.BLACK){
+						pieceMoves.clear();
+						pieceMoves.addAll(piecesBoard[i][j].GetMoves(piecesBoard));
+						movescount=0;
+						movescount = pieceMoves.size();
+						if(movescount > 0)
+						{			
+							random = new Random().nextInt(1000);
+							if(random > max)
+							{
+								oldposition.x = i;
+								oldposition.y = j;
+								//to
+								random = new Random().nextInt(movescount);
+								bestposition = pieceMoves.get(random);									
+							}	
+						}
+					}
+				}			
+			}
 		}
 		
+		piecesBoard[bestposition.x][bestposition.y] = piecesBoard[oldposition.x][oldposition.y];
+		piecesBoard[oldposition.x][oldposition.y] = null;
+		
+			
+			
 	}
 	
 
