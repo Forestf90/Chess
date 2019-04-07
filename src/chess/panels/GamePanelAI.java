@@ -1,6 +1,7 @@
 package chess.panels;
 
 import java.util.ArrayList;
+
 import java.util.Random;
 
 import javax.swing.JOptionPane;
@@ -8,6 +9,8 @@ import javax.swing.JOptionPane;
 import chess.Position;
 import chess.SideColor;
 import chess.pieces.Chessman;
+
+import javax.swing.JOptionPane;
 
 public class GamePanelAI extends GamePanel{
 
@@ -66,14 +69,15 @@ public class GamePanelAI extends GamePanel{
 				if(piecesBoard[i][j] != null){				
 					if(piecesBoard[i][j].color == SideColor.BLACK){
 						pieceMoves.clear();
-						pieceMoves.addAll(piecesBoard[i][j].GetMoves(piecesBoard));
-						movescount=0;
+						pieceMoves.addAll(piecesBoard[i][j].GetMoves(piecesBoard));						
+						movescount = 0;
 						movescount = pieceMoves.size();
 						if(movescount > 0)
 						{			
-							random = new Random().nextInt(1000);
+							random = new Random().nextInt(100);
 							if(random > max)
-							{
+							{								
+								max = random;
 								oldposition.x = i;
 								oldposition.y = j;
 								//to
@@ -85,6 +89,11 @@ public class GamePanelAI extends GamePanel{
 				}			
 			}
 		}
+		
+		JOptionPane.showMessageDialog(null, 
+				movescount, 
+              "TITLE", 
+              JOptionPane.WARNING_MESSAGE);
 		
 		piecesBoard[bestposition.x][bestposition.y] = piecesBoard[oldposition.x][oldposition.y];
 		piecesBoard[oldposition.x][oldposition.y] = null;
