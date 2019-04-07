@@ -62,17 +62,12 @@ public class GamePanelAI extends GamePanel{
 		Position oldposition = new Position(0,0);;
 		int max = 0;
 		int random = 0;
-		int movescount=0;
 		//czym sie rusze
 		for(int i = 0; i <=7; i++){
 			for(int j = 0; j <=7; j++) {
 				if(piecesBoard[i][j] != null){				
 					if(piecesBoard[i][j].color == SideColor.BLACK){
-						pieceMoves.clear();
-						pieceMoves.addAll(piecesBoard[i][j].GetMoves(piecesBoard));						
-						movescount = 0;
-						movescount = pieceMoves.size();
-						if(movescount > 0)
+						if(piecesBoard[i][j].GetMoves(piecesBoard).size() > 0)
 						{			
 							random = new Random().nextInt(100);
 							if(random > max)
@@ -81,7 +76,8 @@ public class GamePanelAI extends GamePanel{
 								oldposition.x = i;
 								oldposition.y = j;
 								//to
-								random = new Random().nextInt(movescount);
+								pieceMoves = piecesBoard[i][j].GetMoves(piecesBoard);
+								random = new Random().nextInt(piecesBoard[i][j].GetMoves(piecesBoard).size());
 								bestposition = pieceMoves.get(random);									
 							}	
 						}
@@ -90,11 +86,9 @@ public class GamePanelAI extends GamePanel{
 			}
 		}
 		
-		JOptionPane.showMessageDialog(null, 
-				movescount, 
-              "TITLE", 
-              JOptionPane.WARNING_MESSAGE);
+
 		
+		piecesBoard[oldposition.x][oldposition.y].pos = bestposition;
 		piecesBoard[bestposition.x][bestposition.y] = piecesBoard[oldposition.x][oldposition.y];
 		piecesBoard[oldposition.x][oldposition.y] = null;
 		
