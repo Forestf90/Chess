@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import chess.Position;
+import chess.PromotePawnDialog;
 import chess.SideColor;
 import chess.pieces.Bishop;
 import chess.pieces.Chessman;
@@ -214,8 +215,22 @@ public void checkChessmanMove(Position newPosition) {
 		
 		if(selected instanceof Pawn) {
 			((Pawn) selected).startPosition=false;
-			if(selected.pos.y==7 || selected.pos.y==0) {
-				//TODO zamiana pionka na figure
+			if(newPosition.y==7 || newPosition.y==0) {
+				int result = PromotePawnDialog.Show();
+				switch(result) {
+				case 0:
+					selected=new Rook(selected.color , selected.pos.x,selected.pos.y);
+					break;
+				case 1:
+					selected=new Knight(selected.color , selected.pos.x,selected.pos.y);
+					break;
+				case 2:
+					selected=new Bishop(selected.color , selected.pos.x,selected.pos.y);
+					break;
+				case 3:
+					selected=new Queen(selected.color , selected.pos.x,selected.pos.y);
+					break;
+				}
 			}
 		}
 		moveChessman(newPosition , selected);
