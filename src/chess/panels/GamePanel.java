@@ -12,6 +12,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import chess.Position;
@@ -166,7 +167,7 @@ public void MouseListner() {
                      repaint();
         		 }else {
         			 
-        			 moveChessman(new Position(tempX ,tempY));
+        			 checkChessmanMove(new Position(tempX ,tempY));
         			 selected=null;
         			 possibleMoves.clear();
         			 repaint();
@@ -195,7 +196,7 @@ public void MouseListner() {
 	
 }
 
-public void moveChessman(Position newPosition) {
+public void checkChessmanMove(Position newPosition) {
 	if(piecesBoard[newPosition.x][newPosition.y]!=null) {
 		//piecesBoard[newPosition.x][newPosition.y]=null;
 		//TODO Add pieces to hit list
@@ -211,20 +212,46 @@ public void moveChessman(Position newPosition) {
 	}
 
 	if(contains) {
-		piecesBoard[newPosition.x][newPosition.y]=selected;
-		piecesBoard[selected.pos.x][selected.pos.y] =null;
-		selected.pos=newPosition;
+		
 		if(selected instanceof Pawn) {
 			((Pawn) selected).startPosition=false;
-			if(selected.pos.y==7 || selected.pos.y==0) {
-				//TODO zamiana pionka na figure
+			if(newPosition.y==7 || newPosition.y==0) {
+				String[] buttons = { "Rook", "Knight", "Bishop", "Queen" };    
+				int result = JOptionPane.showOptionDialog(null,  "Promote your Pawn to:","Promotion",
+				        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[3]);
+				
+
+				switch(result) {
+				case 0:
+					selected=new Rook(selected.color , selected.pos.x,selected.pos.y);
+					break;
+				case 1:
+					selected=new Knight(selected.color , selected.pos.x,selected.pos.y);
+					break;
+				case 2:
+					selected=new Bishop(selected.color , selected.pos.x,selected.pos.y);
+					break;
+				case 3:
+					selected=new Queen(selected.color , selected.pos.x,selected.pos.y);
+					break;
+				}
 			}
 		}
+		moveChessman(newPosition , selected);
+		//selected.pos=null;
 		oponentTurn();
 		
 	}else return;
 
 }
+
+
+public void moveChessman(Position newPosition ,Chessman piece) {
+	piecesBoard[newPosition.x][newPosition.y]=piece;
+	piecesBoard[piece.pos.x][piece.pos.y] =null;
+	piece.pos=newPosition;
+}
+
 
 public ArrayList<Position> getAllMoves(SideColor col){
 	ArrayList<Position> moves =new ArrayList<Position>();
