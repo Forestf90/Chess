@@ -12,6 +12,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import chess.Position;
@@ -216,7 +217,11 @@ public void checkChessmanMove(Position newPosition) {
 		if(selected instanceof Pawn) {
 			((Pawn) selected).startPosition=false;
 			if(newPosition.y==7 || newPosition.y==0) {
-				int result = PromotePawnDialog.Show();
+				String[] buttons = { "Rook", "Knight", "Bishop", "Queen" };    
+				int result = JOptionPane.showOptionDialog(null, "Promotion", "Promote your Pawn to:",
+				        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[3]);
+				
+
 				switch(result) {
 				case 0:
 					selected=new Rook(selected.color , selected.pos.x,selected.pos.y);
