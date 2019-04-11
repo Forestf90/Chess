@@ -16,7 +16,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import chess.Position;
-import chess.PromotePawnDialog;
 import chess.SideColor;
 import chess.pieces.Bishop;
 import chess.pieces.Chessman;
@@ -218,7 +217,7 @@ public void checkChessmanMove(Position newPosition) {
 			((Pawn) selected).startPosition=false;
 			if(newPosition.y==7 || newPosition.y==0) {
 				String[] buttons = { "Rook", "Knight", "Bishop", "Queen" };    
-				int result = JOptionPane.showOptionDialog(null, "Promotion", "Promote your Pawn to:",
+				int result = JOptionPane.showOptionDialog(null,  "Promote your Pawn to:","Promotion",
 				        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[3]);
 				
 
