@@ -166,7 +166,7 @@ public void MouseListner() {
                      repaint();
         		 }else {
         			 
-        			 moveChessman(new Position(tempX ,tempY));
+        			 checkChessmanMove(new Position(tempX ,tempY));
         			 selected=null;
         			 possibleMoves.clear();
         			 repaint();
@@ -195,7 +195,7 @@ public void MouseListner() {
 	
 }
 
-public void moveChessman(Position newPosition) {
+public void checkChessmanMove(Position newPosition) {
 	if(piecesBoard[newPosition.x][newPosition.y]!=null) {
 		//piecesBoard[newPosition.x][newPosition.y]=null;
 		//TODO Add pieces to hit list
@@ -211,20 +211,28 @@ public void moveChessman(Position newPosition) {
 	}
 
 	if(contains) {
-		piecesBoard[newPosition.x][newPosition.y]=selected;
-		piecesBoard[selected.pos.x][selected.pos.y] =null;
-		selected.pos=newPosition;
+		
 		if(selected instanceof Pawn) {
 			((Pawn) selected).startPosition=false;
 			if(selected.pos.y==7 || selected.pos.y==0) {
 				//TODO zamiana pionka na figure
 			}
 		}
+		moveChessman(newPosition , selected);
+		//selected.pos=null;
 		oponentTurn();
 		
 	}else return;
 
 }
+
+
+public void moveChessman(Position newPosition ,Chessman piece) {
+	piecesBoard[newPosition.x][newPosition.y]=piece;
+	piecesBoard[piece.pos.x][piece.pos.y] =null;
+	piece.pos=newPosition;
+}
+
 
 public ArrayList<Position> getAllMoves(SideColor col){
 	ArrayList<Position> moves =new ArrayList<Position>();
