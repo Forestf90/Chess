@@ -40,8 +40,9 @@ public class GamePanelAI extends GamePanel{
 	@Override
 	void oponentTurn() {
 		// TODO Auto-generated method stub
-		
+		enabled= false;
 		AI(SideColor.BLACK);
+		enabled= true;
 		whiteMove^=false;
 		
 	}
@@ -58,7 +59,7 @@ public class GamePanelAI extends GamePanel{
 		ArrayList<Position> pieceMoves = new ArrayList<Position>();
 		
 		
-		Position bestposition = new Position(0,0);;
+		Position newposition = new Position(0,0);;
 		Position oldposition = new Position(0,0);;
 		int max = 0;
 		int random = 0;
@@ -78,7 +79,7 @@ public class GamePanelAI extends GamePanel{
 								//to
 								pieceMoves = piecesBoard[i][j].GetMoves(piecesBoard);
 								random = new Random().nextInt(piecesBoard[i][j].GetMoves(piecesBoard).size());
-								bestposition = pieceMoves.get(random);									
+								newposition = pieceMoves.get(random);									
 							}	
 						}
 					}
@@ -88,8 +89,8 @@ public class GamePanelAI extends GamePanel{
 		
 
 		
-		piecesBoard[oldposition.x][oldposition.y].pos = bestposition;
-		piecesBoard[bestposition.x][bestposition.y] = piecesBoard[oldposition.x][oldposition.y];
+		piecesBoard[oldposition.x][oldposition.y].pos = newposition;
+		piecesBoard[newposition.x][newposition.y] = piecesBoard[oldposition.x][oldposition.y];
 		piecesBoard[oldposition.x][oldposition.y] = null;
 		
 			
