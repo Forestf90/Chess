@@ -3,6 +3,8 @@ package chess.pieces;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -22,7 +24,9 @@ public abstract class Chessman {
 	protected void loadImage() {
 		
 		
-		File trace = new File("./resources/Chess_Pieces_Sprite.png");
+		//File trace = new File("./resources/Chess_Pieces_Sprite.png");
+		URL trace =getClass().getResource("resources/Chess_Pieces_Sprite.png");
+		//File a = Chessman.class.getResource("Chess_Pieces_Sprite.png")
 		try {
 		sprite  = ImageIO.read(trace);
 		}
