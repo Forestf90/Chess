@@ -28,7 +28,7 @@ import chess.pieces.Rook;
 public abstract class GamePanel extends JPanel{
 	
 	protected BufferedImage boardImg;
-	static final int SQUARE_SIZE =64;
+	public int SQUARE_SIZE =64;
 	ArrayList<Position> possibleMoves;
 	Chessman selected;
 	protected Position focus;

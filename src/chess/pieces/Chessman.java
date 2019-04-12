@@ -1,5 +1,7 @@
 package chess.pieces;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +13,7 @@ import javax.imageio.ImageIO;
 
 import chess.Position;
 import chess.SideColor;
+import chess.panels.GamePanel;
 
 public abstract class Chessman {
 
@@ -25,7 +28,7 @@ public abstract class Chessman {
 		
 		
 		//File trace = new File("./resources/Chess_Pieces_Sprite.png");
-		URL trace =getClass().getResource("resources/Chess_Pieces_Sprite.png");
+		URL trace =getClass().getResource("resources/Chess_Pieces_Sprite64.png");
 		//File a = Chessman.class.getResource("Chess_Pieces_Sprite.png")
 		try {
 		sprite  = ImageIO.read(trace);
@@ -45,11 +48,28 @@ public abstract class Chessman {
 		if(this instanceof Queen) spriteNumX=1;
 		if(this instanceof King) spriteNumX=0;
 		
-		if(color==SideColor.BLACK) spriteNumY+=64;
 		
-		img = sprite.getSubimage(spriteNumX*64, spriteNumY,
-				64, 64);
+		int imgSize =64;
+		if(color==SideColor.BLACK) spriteNumY+=imgSize;
+		
+		img = sprite.getSubimage(spriteNumX*imgSize, spriteNumY,
+				imgSize, imgSize);
+		
+		//resizeImage(GamePanel.SQUARE_SIZE);
 	}
+	
+	public void resizeImage(int newSize) {
+		img = resize(img , newSize);
+	}
+	
+    private static BufferedImage resize(BufferedImage img, int size) {
+        Image tmp = img.getScaledInstance(size, size, Image.SCALE_SMOOTH);
+        BufferedImage resized = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = resized.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+        return resized;
+    }
 	
 	public abstract ArrayList<Position> GetMoves(Chessman[][] board);
 }
