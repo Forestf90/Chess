@@ -1,5 +1,7 @@
 package chess;
 
+
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -11,10 +13,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import chess.panels.GamePanel;
 import chess.panels.GamePanelAI;
 import chess.panels.GamePanelHot;
 import chess.panels.GamePanelLAN;
+
 
 
 public class Menu extends JFrame {
@@ -28,6 +30,7 @@ public class Menu extends JFrame {
 		super("Chess");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		Font f =new Font(Font.DIALOG, Font.PLAIN, 24);
 		menuPanel = new JPanel();
 		menuPanel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -44,6 +47,10 @@ public class Menu extends JFrame {
 		lan = new JButton("LAN");
 		ai = new JButton("AI");
 		
+		name.setFont(f);
+		hot.setFont(f);
+		lan.setFont(f);
+		ai.setFont(f);
 		
 		hot.addActionListener(new ActionListener() {
 		    @Override

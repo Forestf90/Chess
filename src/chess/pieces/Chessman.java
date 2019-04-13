@@ -1,8 +1,9 @@
 package chess.pieces;
 
+
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -22,7 +23,7 @@ public abstract class Chessman {
 	protected void loadImage() {
 		
 		
-		File trace = new File("./resources/Chess_Pieces_Sprite.png");
+		URL trace =getClass().getResource("resources/Chess_Pieces_Sprite64.png");
 		try {
 		sprite  = ImageIO.read(trace);
 		}
@@ -41,11 +42,16 @@ public abstract class Chessman {
 		if(this instanceof Queen) spriteNumX=1;
 		if(this instanceof King) spriteNumX=0;
 		
-		if(color==SideColor.BLACK) spriteNumY+=64;
 		
-		img = sprite.getSubimage(spriteNumX*64, spriteNumY,
-				64, 64);
+		int imgSize =64;
+		if(color==SideColor.BLACK) spriteNumY+=imgSize;
+		
+		img = sprite.getSubimage(spriteNumX*imgSize, spriteNumY,
+				imgSize, imgSize);
+		
+
 	}
+
 	
 	public abstract ArrayList<Position> GetMoves(Chessman[][] board);
 }
