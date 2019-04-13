@@ -12,6 +12,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -30,6 +31,7 @@ public abstract class GamePanel extends JPanel{
 	protected BufferedImage boardImg;
 	public int SQUARE_SIZE =64;
 	ArrayList<Position> possibleMoves;
+	ArrayList<Position> lastMove;
 	Chessman selected;
 	protected Position focus;
 	public Chessman[][] piecesBoard;
@@ -46,6 +48,7 @@ public abstract class GamePanel extends JPanel{
 		
 		piecesBoard = new Chessman[8][8];
 		possibleMoves=new ArrayList<Position>();
+		lastMove = new ArrayList<Position>();
 		focus = new Position(0,0);
 		whiteMove= true;
 		enabled =true;
@@ -58,9 +61,13 @@ public abstract class GamePanel extends JPanel{
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.setColor(new Color(128,128,128,196));
 		g.drawImage(boardImg , 0 ,0 ,8*SQUARE_SIZE,8*SQUARE_SIZE , null);
 		
+		for(Position lm: lastMove) {
+			g.setColor(new Color(0, 102, 102,128));
+			g.fillRect(lm.x*SQUARE_SIZE, lm.y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE );
+		}
+		g.setColor(new Color(128,128,128,196));
 		g.fillRect(focus.x*SQUARE_SIZE, focus.y*SQUARE_SIZE,SQUARE_SIZE , SQUARE_SIZE);
 		for(int i=0 ; i<piecesBoard.length ;i++) {
 			for(int j=0 ; j<piecesBoard[i].length;j++) {
@@ -73,9 +80,10 @@ public abstract class GamePanel extends JPanel{
 		}
 		g.setColor(new Color(0,255,0,  192));
 		if(selected!=null) {
-			((Graphics2D) g).setStroke(new BasicStroke(5));
-			g.drawRect(selected.pos.x*SQUARE_SIZE, selected.pos.y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE );
+			((Graphics2D) g).setStroke(new BasicStroke(4));
+			g.drawRect(selected.pos.x*SQUARE_SIZE+2, selected.pos.y*SQUARE_SIZE+2, SQUARE_SIZE-4, SQUARE_SIZE-4 );
 		}
+
 		for(Position ch: possibleMoves) {
 			if(piecesBoard[ch.x][ch.y]!= null) {
 				if(piecesBoard[ch.x][ch.y].color!=selected.color) {
@@ -247,6 +255,10 @@ public void checkChessmanMove(Position newPosition) {
 
 
 public void moveChessman(Position newPosition ,Chessman piece) {
+	lastMove.clear();
+	lastMove.add(piece.pos);
+	lastMove.add(newPosition);
+	
 	piecesBoard[newPosition.x][newPosition.y]=piece;
 	piecesBoard[piece.pos.x][piece.pos.y] =null;
 	piece.pos=newPosition;
