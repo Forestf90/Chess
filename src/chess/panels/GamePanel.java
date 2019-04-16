@@ -32,6 +32,7 @@ public abstract class GamePanel extends JPanel{
 	public int SQUARE_SIZE =64;
 	ArrayList<Position> possibleMoves;
 	ArrayList<Position> lastMove;
+	ArrayList<Position> checkPosition;
 	Chessman selected;
 	protected Position focus;
 	public Chessman[][] piecesBoard;
@@ -49,6 +50,7 @@ public abstract class GamePanel extends JPanel{
 		piecesBoard = new Chessman[8][8];
 		possibleMoves=new ArrayList<Position>();
 		lastMove = new ArrayList<Position>();
+		checkPosition= new ArrayList<Position>();
 		focus = new Position(0,0);
 		whiteMove= true;
 		enabled =true;
@@ -67,6 +69,11 @@ public abstract class GamePanel extends JPanel{
 			g.setColor(new Color(0, 102, 102,128));
 			g.fillRect(lm.x*SQUARE_SIZE, lm.y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE );
 		}
+		for(Position ch: checkPosition) {
+			g.setColor(new Color(255,0,0,128));
+			g.fillRect(ch.x*SQUARE_SIZE, ch.y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE );
+		}
+		
 		g.setColor(new Color(128,128,128,196));
 		g.fillRect(focus.x*SQUARE_SIZE, focus.y*SQUARE_SIZE,SQUARE_SIZE , SQUARE_SIZE);
 		for(int i=0 ; i<piecesBoard.length ;i++) {
@@ -262,23 +269,60 @@ public void moveChessman(Position newPosition ,Chessman piece) {
 	piecesBoard[newPosition.x][newPosition.y]=piece;
 	piecesBoard[piece.pos.x][piece.pos.y] =null;
 	piece.pos=newPosition;
+	
+	SideColor c =piece.color;
+	if(c==SideColor.BLACK)c=SideColor.WHITE;
+	else c= SideColor.BLACK;
+	boolean isCheck =check(piecesBoard ,c);
+	if(!isCheck) checkPosition.clear();
 }
 
 
-public ArrayList<Position> getAllMoves(SideColor col){
+public ArrayList<Position> getAllMoves(SideColor col ,Chessman board[][]){
 	ArrayList<Position> moves =new ArrayList<Position>();
 
-	SideColor SideColor = col;
-	
 	for(int i = 0; i <=7; i++){
 		for(int j = 0; j <=7; j++) {
-			if(piecesBoard[i][j] != null)
+			if(board[i][j] != null)
 			{				
-				if(piecesBoard[i][j].color == SideColor)
-				moves.addAll(piecesBoard[i][j].GetMoves(piecesBoard));
+				if(board[i][j].color == col) moves.addAll(board[i][j].GetMoves(board));
 			}			
 		}
 	}
+	return moves;
+}
+
+public boolean check(Chessman board[][],SideColor col) {
+	Position kingPosition = new Position(0,0);
+	for(int i=0; i<board.length ; i++) {
+		for(int j=0 ; j<board[i].length;j++) {
+			if(board[i][j]!=null) {
+				if(board[i][j] instanceof King && board[i][j].color==col){
+					kingPosition =board[i][j].pos;
+				}
+			}
+		}
+	}
+	
+	SideColor c =col;
+	if(c==SideColor.BLACK)c=SideColor.WHITE;
+	else c=SideColor.BLACK;
+	
+	ArrayList<Position> enemyMoves =getAllMoves(c ,board);
+	
+	for(Position p : enemyMoves) {
+		if(kingPosition.x==p.x &&kingPosition.y==p.y) {
+			checkPosition.add(p);
+			checkPosition.add(kingPosition);
+			return true;
+		}
+	}
+	
+	return false;
+}
+public ArrayList<Position> preventCheck(ArrayList<Position> moves){
+	
+	
 	return moves;
 }
 

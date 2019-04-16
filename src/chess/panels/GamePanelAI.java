@@ -54,7 +54,7 @@ public class GamePanelAI extends GamePanel{
 	
 	void AI(SideColor col) {
 							
-		ArrayList<Position> allMovesList = getAllMoves(SideColor.BLACK);
+		ArrayList<Position> allMovesList = getAllMoves(SideColor.BLACK,piecesBoard);
 		
 		ArrayList<Position> pieceMoves = new ArrayList<Position>();
 		
