@@ -32,7 +32,7 @@ public abstract class GamePanel extends JPanel{
 	public int SQUARE_SIZE =64;
 	ArrayList<Position> possibleMoves;
 	ArrayList<Position> lastMove;
-	ArrayList<Position> checkPosition;
+	Position checkPosition;
 	Chessman selected;
 	protected Position focus;
 	public Chessman[][] piecesBoard;
@@ -50,7 +50,6 @@ public abstract class GamePanel extends JPanel{
 		piecesBoard = new Chessman[8][8];
 		possibleMoves=new ArrayList<Position>();
 		lastMove = new ArrayList<Position>();
-		checkPosition= new ArrayList<Position>();
 		focus = new Position(0,0);
 		whiteMove= true;
 		enabled =true;
@@ -69,10 +68,11 @@ public abstract class GamePanel extends JPanel{
 			g.setColor(new Color(0, 102, 102,128));
 			g.fillRect(lm.x*SQUARE_SIZE, lm.y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE );
 		}
-		for(Position ch: checkPosition) {
+		if(checkPosition!=null) {
 			g.setColor(new Color(255,0,0,128));
-			g.fillRect(ch.x*SQUARE_SIZE, ch.y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE );
+			g.fillRect(checkPosition.x*SQUARE_SIZE, checkPosition.y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE );
 		}
+
 		
 		g.setColor(new Color(128,128,128,196));
 		g.fillRect(focus.x*SQUARE_SIZE, focus.y*SQUARE_SIZE,SQUARE_SIZE , SQUARE_SIZE);
@@ -156,201 +156,190 @@ public abstract class GamePanel extends JPanel{
 	}
 
 
-public void MouseListner() {
-	 addMouseListener(new MouseAdapter(){ 
-         public void mousePressed(MouseEvent me) { 
-           //blokowanie(me.getX() ,me.getY());
-        	 int tempX =me.getX()/SQUARE_SIZE;
-        	 int tempY =me.getY()/SQUARE_SIZE;
-        	 if((piecesBoard[tempX][tempY]==null && selected==null) || !enabled) return;
-        	 else if(selected==null) {
-            	 selected =piecesBoard[tempX][tempY];
-            	 if(selected.color==SideColor.WHITE && !whiteMove) {
-            		 selected=null;
-            		 return;
-            	 }
-            	 else if(selected.color==SideColor.BLACK && whiteMove) {
-            		 selected=null;
-            		 return;
-            	 }
-                 possibleMoves =preventCheck(selected.GetMoves(piecesBoard), piecesBoard , selected);
-                 repaint();
-        	 }else if(selected!=null) {
-        		 if(piecesBoard[tempX][tempY]!=null && piecesBoard[tempX][tempY].color== selected.color) {
-                	 selected =piecesBoard[tempX][tempY];
-                     possibleMoves =preventCheck(selected.GetMoves(piecesBoard), piecesBoard , selected);
-                     repaint();
-        		 }else {
-        			 
-        			 checkChessmanMove(new Position(tempX ,tempY));
-        			 selected=null;
-        			 possibleMoves.clear();
-        			 repaint();
-        		 }
-        		 
-        	 }
-           
-         }
-       }); 
-	 
-	 addMouseMotionListener(new MouseMotionListener() {
-		 @Override
-		public void mouseMoved(MouseEvent me) {
-        	 focus.x=me.getX()/SQUARE_SIZE;
-        	 focus.y=me.getY()/SQUARE_SIZE;
-        	 repaint();
-		}
-
-		@Override
-		public void mouseDragged(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
+	public void MouseListner() {
+		 addMouseListener(new MouseAdapter(){ 
+	         public void mousePressed(MouseEvent me) { 
+	           //blokowanie(me.getX() ,me.getY());
+	        	 int tempX =me.getX()/SQUARE_SIZE;
+	        	 int tempY =me.getY()/SQUARE_SIZE;
+	        	 if((piecesBoard[tempX][tempY]==null && selected==null) || !enabled) return;
+	        	 else if(selected==null) {
+	            	 selected =piecesBoard[tempX][tempY];
+	            	 if(selected.color==SideColor.WHITE && !whiteMove) {
+	            		 selected=null;
+	            		 return;
+	            	 }
+	            	 else if(selected.color==SideColor.BLACK && whiteMove) {
+	            		 selected=null;
+	            		 return;
+	            	 }
+	                 possibleMoves =preventCheck(selected.GetMoves(piecesBoard), piecesBoard , selected);
+	                 repaint();
+	        	 }else if(selected!=null) {
+	        		 if(piecesBoard[tempX][tempY]!=null && piecesBoard[tempX][tempY].color== selected.color) {
+	                	 selected =piecesBoard[tempX][tempY];
+	                     possibleMoves =preventCheck(selected.GetMoves(piecesBoard), piecesBoard , selected);
+	                     repaint();
+	        		 }else {
+	        			 
+	        			 checkChessmanMove(new Position(tempX ,tempY));
+	        			 selected=null;
+	        			 possibleMoves.clear();
+	        			 repaint();
+	        		 }
+	        		 
+	        	 }
+	           
+	         }
+	       }); 
 		 
-	 });
+		 addMouseMotionListener(new MouseMotionListener() {
+			 @Override
+			public void mouseMoved(MouseEvent me) {
+	        	 focus.x=me.getX()/SQUARE_SIZE;
+	        	 focus.y=me.getY()/SQUARE_SIZE;
+	        	 repaint();
+			}
 	
-}
-
-public void checkChessmanMove(Position newPosition) {
-	if(piecesBoard[newPosition.x][newPosition.y]!=null) {
-		//piecesBoard[newPosition.x][newPosition.y]=null;
-		//TODO Add pieces to hit list
-	}
-	boolean contains= false;
-	
-	for(Position m : possibleMoves) {
-		
-		if(m.x==newPosition.x && m.y==newPosition.y) {
-			contains=true;
-			break;
-		}
-	}
-
-	if(contains) {
-		
-		if(selected instanceof Pawn) {
-			((Pawn) selected).startPosition=false;
-			if(newPosition.y==7 || newPosition.y==0) {
-				String[] buttons = { "Rook", "Knight", "Bishop", "Queen" };    
-				int result = JOptionPane.showOptionDialog(null,  "Promote your Pawn to:","Promotion",
-				        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[3]);
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				// TODO Auto-generated method stub
 				
-
-				switch(result) {
-				case 0:
-					selected=new Rook(selected.color , selected.pos.x,selected.pos.y);
-					break;
-				case 1:
-					selected=new Knight(selected.color , selected.pos.x,selected.pos.y);
-					break;
-				case 2:
-					selected=new Bishop(selected.color , selected.pos.x,selected.pos.y);
-					break;
-				case 3:
-					selected=new Queen(selected.color , selected.pos.x,selected.pos.y);
-					break;
-				}
 			}
-		}
-		moveChessman(newPosition , selected);
-		//selected.pos=null;
-		oponentTurn();
+			 
+		 });
 		
-	}else return;
-
-}
-
-
-public void moveChessman(Position newPosition ,Chessman piece) {
-	lastMove.clear();
-	lastMove.add(piece.pos);
-	lastMove.add(newPosition);
-	
-	piecesBoard[newPosition.x][newPosition.y]=piece;
-	piecesBoard[piece.pos.x][piece.pos.y] =null;
-	piece.pos=newPosition;
-	
-	SideColor c =piece.color.swapColor();
-
-	boolean isCheck =check(piecesBoard ,c);
-	if(!isCheck) checkPosition.clear();
-	//else checkPosition.add(kingPosition);
-}
-
-
-public ArrayList<Position> getAllMoves(SideColor col ,Chessman board[][]){
-	ArrayList<Position> moves =new ArrayList<Position>();
-
-	for(int i = 0; i <=7; i++){
-		for(int j = 0; j <=7; j++) {
-			if(board[i][j] != null)
-			{				
-				if(board[i][j].color == col) moves.addAll(board[i][j].GetMoves(board));
-			}			
-		}
 	}
-	return moves;
-}
 
-public boolean check(Chessman board[][],SideColor col) {
-	Position kingPosition = new Position(0,0);
-	for(int i=0; i<board.length ; i++) {
-		for(int j=0 ; j<board[i].length;j++) {
-			if(board[i][j]!=null) {
-				if(board[i][j] instanceof King && board[i][j].color==col){
-					kingPosition =board[i][j].pos;
+	public void checkChessmanMove(Position newPosition) {
+		if(piecesBoard[newPosition.x][newPosition.y]!=null) {
+			//piecesBoard[newPosition.x][newPosition.y]=null;
+			//TODO Add pieces to hit list
+		}
+		boolean contains= false;
+		
+		for(Position m : possibleMoves) {
+			
+			if(m.x==newPosition.x && m.y==newPosition.y) {
+				contains=true;
+				break;
+			}
+		}
+	
+		if(contains) {
+			
+			if(selected instanceof Pawn) {
+				((Pawn) selected).startPosition=false;
+				if(newPosition.y==7 || newPosition.y==0) {
+					String[] buttons = { "Rook", "Knight", "Bishop", "Queen" };    
+					int result = JOptionPane.showOptionDialog(null,  "Promote your Pawn to:","Promotion",
+					        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[3]);
+					
+	
+					switch(result) {
+					case 0:
+						selected=new Rook(selected.color , selected.pos.x,selected.pos.y);
+						break;
+					case 1:
+						selected=new Knight(selected.color , selected.pos.x,selected.pos.y);
+						break;
+					case 2:
+						selected=new Bishop(selected.color , selected.pos.x,selected.pos.y);
+						break;
+					case 3:
+						selected=new Queen(selected.color , selected.pos.x,selected.pos.y);
+						break;
+					}
+				}
+			}
+			moveChessman(newPosition , selected);
+			//selected.pos=null;
+			oponentTurn();
+			
+		}else return;
+	
+	}
+
+
+	public void moveChessman(Position newPosition ,Chessman piece) {
+		lastMove.clear();
+		lastMove.add(piece.pos);
+		lastMove.add(newPosition);
+		
+		piecesBoard[newPosition.x][newPosition.y]=piece;
+		piecesBoard[piece.pos.x][piece.pos.y] =null;
+		piece.pos=newPosition;
+		
+		SideColor c =piece.color.swapColor();
+	
+		boolean isCheck =check(piecesBoard ,c);
+		if(!isCheck) checkPosition=null;
+		else {
+			checkPosition = findKing(piecesBoard ,c);
+		}
+		
+		//else checkPosition.add(kingPosition);
+	}
+
+
+	public ArrayList<Position> getAllMoves(SideColor col ,Chessman board[][]){
+		ArrayList<Position> moves =new ArrayList<Position>();
+	
+		for(int i = 0; i <=7; i++){
+			for(int j = 0; j <=7; j++) {
+				if(board[i][j] != null)
+				{				
+					if(board[i][j].color == col) moves.addAll(board[i][j].GetMoves(board));
+				}			
+			}
+		}
+		return moves;
+	}
+	public Position findKing(Chessman board[][] , SideColor col) {
+		Position kingPosition = new Position(0,0);
+		for(int i=0; i<board.length ; i++) {
+			for(int j=0 ; j<board[i].length;j++) {
+				if(board[i][j]!=null) {
+					if(board[i][j] instanceof King && board[i][j].color==col){
+						kingPosition =new Position(i,j);
+					}
 				}
 			}
 		}
+		return kingPosition;
 	}
-	
-	SideColor c =col.swapColor();
+	public boolean check(Chessman board[][],SideColor col) {
 
-	
-	ArrayList<Position> enemyMoves =getAllMoves(c ,board);
-	
-	for(Position p : enemyMoves) {
-		if(kingPosition.x==p.x &&kingPosition.y==p.y) {
-			//checkPosition.add(p);
-//			checkPosition.add(kingPosition);
-			return true;
+		Position kingPosition =findKing(board , col);
+		SideColor c =col.swapColor();
+		
+		ArrayList<Position> enemyMoves =getAllMoves(c ,board);
+		
+		for(Position p : enemyMoves) {
+			if(kingPosition.x==p.x &&kingPosition.y==p.y) {
+				return true;
+			}
 		}
+		
+		return false;
 	}
-	
-	return false;
-}
 
-public ArrayList<Position> preventCheck(ArrayList<Position> moves , Chessman board[][], Chessman piece){
-	
-//	Position kingPosition = new Position(0,0);
-//	if(this instanceof King) kingPosition = this.pos;
-//	else {
-//		for(int i=0; i<board.length ; i++) {
-//			for(int j=0 ; j<board[i].length;j++) {
-//				if(board[i][j]!=null) {
-//					if(board[i][j] instanceof King && board[i][j].color==this.color){
-//						kingPosition =board[i][j].pos;
-//					}
-//				}
-//			}
-//		}
-//	}
-	ArrayList<Position> newMoves = new ArrayList<Position>();
-	for(Position p: moves) {
-		Chessman[][] tempBoard = Arrays.stream(board).map(r -> r.clone()).toArray(Chessman[][]::new);
-//		tempBoard = board;
-//		Chessman temp = board[p.x][p.y];
-		tempBoard[piece.pos.x][piece.pos.y]=null;
-		tempBoard[p.x][p.y]=piece;
-		boolean isCheck = check(tempBoard, piece.color);
-		if(!isCheck)newMoves.add(p);
-//		board[p.x][p.y]= temp;
-//		board[pos.x][pos.y] =this;
+	public ArrayList<Position> preventCheck(ArrayList<Position> moves , Chessman board[][], Chessman piece){
+		
+		ArrayList<Position> newMoves = new ArrayList<Position>();
+		for(Position p: moves) {
+			Chessman[][] tempBoard = Arrays.stream(board).map(r -> r.clone()).toArray(Chessman[][]::new);
+
+			tempBoard[piece.pos.x][piece.pos.y]=null;
+			tempBoard[p.x][p.y]=piece;
+			boolean isCheck = check(tempBoard, piece.color);
+			if(!isCheck)newMoves.add(p);
+
+		}
+		
+		
+		return newMoves;
 	}
-	
-	
-	return newMoves;
-}
 
 
 }
