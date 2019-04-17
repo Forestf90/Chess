@@ -103,7 +103,7 @@ public ArrayList<Position> GetMoves(Chessman[][] board) {
 					break;				
 			}		
 		}
-		
+
 		return moves;		
 	}
 }

@@ -47,7 +47,7 @@ public class Pawn extends Chessman {
 
 
 		
-		
+
 		return moves;
 		
 	}
