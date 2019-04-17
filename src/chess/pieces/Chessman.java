@@ -5,11 +5,13 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
 import chess.Position;
 import chess.SideColor;
+import chess.panels.GamePanel;
 
 public abstract class Chessman {
 
@@ -51,7 +53,5 @@ public abstract class Chessman {
 		
 
 	}
-
-	
 	public abstract ArrayList<Position> GetMoves(Chessman[][] board);
 }

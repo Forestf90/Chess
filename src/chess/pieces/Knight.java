@@ -121,7 +121,7 @@ public class Knight extends Chessman {
 			}		
 		}
 		
-			
+
 		return moves;
 		
 	}

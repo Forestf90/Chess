@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-
+import java.util.Arrays;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -173,12 +173,12 @@ public void MouseListner() {
             		 selected=null;
             		 return;
             	 }
-                 possibleMoves =selected.GetMoves(piecesBoard);
+                 possibleMoves =preventCheck(selected.GetMoves(piecesBoard), piecesBoard , selected);
                  repaint();
         	 }else if(selected!=null) {
         		 if(piecesBoard[tempX][tempY]!=null && piecesBoard[tempX][tempY].color== selected.color) {
                 	 selected =piecesBoard[tempX][tempY];
-                     possibleMoves =selected.GetMoves(piecesBoard);
+                     possibleMoves =preventCheck(selected.GetMoves(piecesBoard), piecesBoard , selected);
                      repaint();
         		 }else {
         			 
@@ -270,11 +270,11 @@ public void moveChessman(Position newPosition ,Chessman piece) {
 	piecesBoard[piece.pos.x][piece.pos.y] =null;
 	piece.pos=newPosition;
 	
-	SideColor c =piece.color;
-	if(c==SideColor.BLACK)c=SideColor.WHITE;
-	else c= SideColor.BLACK;
+	SideColor c =piece.color.swapColor();
+
 	boolean isCheck =check(piecesBoard ,c);
 	if(!isCheck) checkPosition.clear();
+	//else checkPosition.add(kingPosition);
 }
 
 
@@ -304,26 +304,53 @@ public boolean check(Chessman board[][],SideColor col) {
 		}
 	}
 	
-	SideColor c =col;
-	if(c==SideColor.BLACK)c=SideColor.WHITE;
-	else c=SideColor.BLACK;
+	SideColor c =col.swapColor();
+
 	
 	ArrayList<Position> enemyMoves =getAllMoves(c ,board);
 	
 	for(Position p : enemyMoves) {
 		if(kingPosition.x==p.x &&kingPosition.y==p.y) {
-			checkPosition.add(p);
-			checkPosition.add(kingPosition);
+			//checkPosition.add(p);
+//			checkPosition.add(kingPosition);
 			return true;
 		}
 	}
 	
 	return false;
 }
-public ArrayList<Position> preventCheck(ArrayList<Position> moves){
+
+public ArrayList<Position> preventCheck(ArrayList<Position> moves , Chessman board[][], Chessman piece){
+	
+//	Position kingPosition = new Position(0,0);
+//	if(this instanceof King) kingPosition = this.pos;
+//	else {
+//		for(int i=0; i<board.length ; i++) {
+//			for(int j=0 ; j<board[i].length;j++) {
+//				if(board[i][j]!=null) {
+//					if(board[i][j] instanceof King && board[i][j].color==this.color){
+//						kingPosition =board[i][j].pos;
+//					}
+//				}
+//			}
+//		}
+//	}
+	ArrayList<Position> newMoves = new ArrayList<Position>();
+	for(Position p: moves) {
+		Chessman[][] tempBoard = Arrays.stream(board).map(r -> r.clone()).toArray(Chessman[][]::new);
+//		tempBoard = board;
+//		Chessman temp = board[p.x][p.y];
+		tempBoard[piece.pos.x][piece.pos.y]=null;
+		tempBoard[p.x][p.y]=piece;
+		boolean isCheck = check(tempBoard, piece.color);
+		if(!isCheck)newMoves.add(p);
+//		board[p.x][p.y]= temp;
+//		board[pos.x][pos.y] =this;
+	}
 	
 	
-	return moves;
+	return newMoves;
 }
+
 
 }

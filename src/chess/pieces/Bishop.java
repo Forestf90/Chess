@@ -100,7 +100,7 @@ public class Bishop extends Chessman {
 			i++;
 		}
 		
-		
+
 		return moves;
 		
 	}

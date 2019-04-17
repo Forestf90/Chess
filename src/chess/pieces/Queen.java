@@ -184,7 +184,7 @@ public class Queen extends Chessman {
 					}
 					i++;
 				}
-		
+
 		return moves;
 		
 	}
