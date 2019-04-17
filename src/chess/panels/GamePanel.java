@@ -275,12 +275,16 @@ public abstract class GamePanel extends JPanel{
 		SideColor c =piece.color.swapColor();
 	
 		boolean isCheck =check(piecesBoard ,c);
-		if(!isCheck) checkPosition=null;
+		if(!isCheck) {
+			checkPosition=null;
+			checkStalemate(piece.color.swapColor() , piecesBoard);
+		}
 		else {
 			checkPosition = findKing(piecesBoard ,c);
+			checkmate(piece.color.swapColor() , piecesBoard);
 		}
 		
-		checkStalemate(piece.color.swapColor() , piecesBoard);
+		
 		//else checkPosition.add(kingPosition);
 	}
 
@@ -358,15 +362,25 @@ public abstract class GamePanel extends JPanel{
 		return newMoves;
 	}
 
-	public void checkMate() {
+	public void checkmate(SideColor col , Chessman[][] board) {
+		ArrayList<Position> any = getAllSafeMoves(col , board);
 		
+		if(any.isEmpty()) {
+			repaint();
+			JOptionPane.showMessageDialog(null,col.getBetterString() +" King is checkmate. "+col.swapColor().getBetterString()+
+					"s wins. " ,
+					"Checkmate",JOptionPane.INFORMATION_MESSAGE);
+			new Menu();
+			SwingUtilities.windowForComponent(this).dispose();
+		}
 	}
 	
 	public void checkStalemate(SideColor col , Chessman[][] board) {
 		ArrayList<Position> any = getAllSafeMoves(col , board);
 		
 		if(any.isEmpty()) {
-			JOptionPane.showMessageDialog(null,col.getBetterString() +" have no more available moves. The game ends with a draw. " ,
+			repaint();
+			JOptionPane.showMessageDialog(null,col.getBetterString() +"s have no more available moves. The game ends with a draw. " ,
 					"Stalemate",JOptionPane.INFORMATION_MESSAGE);
 			new Menu();
 			SwingUtilities.windowForComponent(this).dispose();

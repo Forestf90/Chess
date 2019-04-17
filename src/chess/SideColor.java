@@ -8,8 +8,8 @@ public enum SideColor {
 	 return  SideColor.WHITE;
  }
  public String getBetterString() {
-	 if(this ==SideColor.WHITE) return "Blacks";
-	 return  "Whites";
+	 if(this ==SideColor.WHITE) return "White";
+	 return  "Black";
 
  }
  
