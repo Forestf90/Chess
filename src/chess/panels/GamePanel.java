@@ -15,7 +15,9 @@ import java.util.Arrays;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
+import chess.Menu;
 import chess.Position;
 import chess.SideColor;
 import chess.pieces.Bishop;
@@ -278,6 +280,7 @@ public abstract class GamePanel extends JPanel{
 			checkPosition = findKing(piecesBoard ,c);
 		}
 		
+		checkStalemate(piece.color.swapColor() , piecesBoard);
 		//else checkPosition.add(kingPosition);
 	}
 
@@ -290,6 +293,20 @@ public abstract class GamePanel extends JPanel{
 				if(board[i][j] != null)
 				{				
 					if(board[i][j].color == col) moves.addAll(board[i][j].GetMoves(board));
+				}			
+			}
+		}
+		return moves;
+	}
+	
+	public ArrayList<Position> getAllSafeMoves(SideColor col ,Chessman board[][]){
+		ArrayList<Position> moves =new ArrayList<Position>();
+	
+		for(int i = 0; i <=7; i++){
+			for(int j = 0; j <=7; j++) {
+				if(board[i][j] != null)
+				{				
+					if(board[i][j].color == col) moves.addAll(preventCheck(board[i][j].GetMoves(board),board,board[i][j]));
 				}			
 			}
 		}
@@ -341,5 +358,20 @@ public abstract class GamePanel extends JPanel{
 		return newMoves;
 	}
 
+	public void checkMate() {
+		
+	}
+	
+	public void checkStalemate(SideColor col , Chessman[][] board) {
+		ArrayList<Position> any = getAllSafeMoves(col , board);
+		
+		if(any.isEmpty()) {
+			JOptionPane.showMessageDialog(null,col.getBetterString() +" have no more available moves. The game ends with a draw. " ,
+					"Stalemate",JOptionPane.INFORMATION_MESSAGE);
+			new Menu();
+			SwingUtilities.windowForComponent(this).dispose();
+		}
+		
+	}
 
 }

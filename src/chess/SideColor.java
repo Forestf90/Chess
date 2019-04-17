@@ -7,4 +7,10 @@ public enum SideColor {
 	 if(this ==SideColor.WHITE) return SideColor.BLACK;
 	 return  SideColor.WHITE;
  }
+ public String getBetterString() {
+	 if(this ==SideColor.WHITE) return "Blacks";
+	 return  "Whites";
+
+ }
+ 
 }
