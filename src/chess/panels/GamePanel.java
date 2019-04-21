@@ -366,6 +366,7 @@ public abstract class GamePanel extends JPanel{
 		ArrayList<Position> any = getAllSafeMoves(col , board);
 		
 		if(any.isEmpty()) {
+			possibleMoves.clear();
 			repaint();
 			JOptionPane.showMessageDialog(null,col.getBetterString() +" King is checkmate. "+col.swapColor().getBetterString()+
 					"s wins. " ,
@@ -379,6 +380,7 @@ public abstract class GamePanel extends JPanel{
 		ArrayList<Position> any = getAllSafeMoves(col , board);
 		
 		if(any.isEmpty()) {
+			possibleMoves.clear();
 			repaint();
 			JOptionPane.showMessageDialog(null,col.getBetterString() +"s have no more available moves. The game ends with a draw. " ,
 					"Stalemate",JOptionPane.INFORMATION_MESSAGE);
