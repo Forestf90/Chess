@@ -289,7 +289,7 @@ public abstract class GamePanel extends JPanel{
 	}
 
 
-	public ArrayList<Position> getAllMoves(SideColor col ,Chessman board[][]){
+	public static ArrayList<Position> getAllMoves(SideColor col ,Chessman board[][]){
 		ArrayList<Position> moves =new ArrayList<Position>();
 	
 		for(int i = 0; i <=7; i++){
@@ -316,7 +316,7 @@ public abstract class GamePanel extends JPanel{
 		}
 		return moves;
 	}
-	public Position findKing(Chessman board[][] , SideColor col) {
+	public static Position findKing(Chessman board[][] , SideColor col) {
 		Position kingPosition = new Position(0,0);
 		for(int i=0; i<board.length ; i++) {
 			for(int j=0 ; j<board[i].length;j++) {
@@ -329,7 +329,7 @@ public abstract class GamePanel extends JPanel{
 		}
 		return kingPosition;
 	}
-	public boolean check(Chessman board[][],SideColor col) {
+	public static boolean check(Chessman board[][],SideColor col) {
 
 		Position kingPosition =findKing(board , col);
 		SideColor c =col.swapColor();
