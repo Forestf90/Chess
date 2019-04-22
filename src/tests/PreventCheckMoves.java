@@ -1,10 +1,7 @@
 package tests;
 
-import static org.hamcrest.CoreMatchers.*;
 //import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;

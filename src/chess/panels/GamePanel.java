@@ -12,6 +12,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -347,19 +348,17 @@ public abstract class GamePanel extends JPanel{
 
 	public ArrayList<Position> preventCheck(ArrayList<Position> moves , Chessman board[][], Chessman piece){
 		
-		ArrayList<Position> newMoves = new ArrayList<Position>();
-		for(Position p: moves) {
+		Iterator<Position> i = moves.iterator();
+		while(i.hasNext()) {
+			Position p = i.next();
+			
 			Chessman[][] tempBoard = Arrays.stream(board).map(r -> r.clone()).toArray(Chessman[][]::new);
-
 			tempBoard[piece.pos.x][piece.pos.y]=null;
 			tempBoard[p.x][p.y]=piece;
 			boolean isCheck = check(tempBoard, piece.color);
-			if(!isCheck)newMoves.add(p);
-
+			if(isCheck)i.remove();
 		}
-		
-		
-		return newMoves;
+		return moves;
 	}
 
 	public void checkmate(SideColor col , Chessman[][] board) {
