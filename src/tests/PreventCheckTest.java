@@ -14,7 +14,7 @@ import chess.pieces.Chessman;
 import chess.pieces.King;
 import chess.pieces.Queen;
 
-class PreventCheckMoves {
+class PreventCheckTest {
 	
 	GamePanelHot gp = new GamePanelHot();
 	@Test
