@@ -68,7 +68,7 @@ public class GamePanelAI extends GamePanel{
 				if(piecesBoard[i][j] != null){				
 					if(piecesBoard[i][j].color == SideColor.BLACK){
 						//zmien na preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard ,piecesBoard[i][j])
-						if(piecesBoard[i][j].GetMoves(piecesBoard).size() > 0)
+						if(preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard ,piecesBoard[i][j]).size() >0)
 						{			
 							random = new Random().nextInt(100);
 							if(random > max)
@@ -78,8 +78,8 @@ public class GamePanelAI extends GamePanel{
 								oldposition.y = j;
 								//to
 								//no i tutaj tez jak w tym ife
-								pieceMoves = piecesBoard[i][j].GetMoves(piecesBoard);
-								random = new Random().nextInt(piecesBoard[i][j].GetMoves(piecesBoard).size());
+								pieceMoves = preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard ,piecesBoard[i][j]);
+								random = new Random().nextInt(preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard ,piecesBoard[i][j]).size());
 								newposition = pieceMoves.get(random);									
 							}	
 						}
@@ -88,12 +88,7 @@ public class GamePanelAI extends GamePanel{
 			}
 		}
 		
-		//to trzeba zamienic zeby korzystalo z funkcji moveChessman inaczej funkcja szacha sie nie odpali
-		
-		piecesBoard[oldposition.x][oldposition.y].pos = newposition;
-		piecesBoard[newposition.x][newposition.y] = piecesBoard[oldposition.x][oldposition.y];
-		piecesBoard[oldposition.x][oldposition.y] = null;
-		
+		moveChessman(newposition,piecesBoard[oldposition.x][oldposition.y]);	
 			
 			
 	}
