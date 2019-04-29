@@ -19,7 +19,7 @@ public abstract class Chessman {
 	
 	public BufferedImage img;
 	public SideColor color;
-
+	public boolean notMoved;
 	public Position pos;
 	
 	protected void loadImage() {

@@ -262,7 +262,9 @@ public abstract class GamePanel extends JPanel{
 		}else return;
 	
 	}
-
+	public void castling() {
+		
+	}
 
 	public void moveChessman(Position newPosition ,Chessman piece) {
 		lastMove.clear();
@@ -272,8 +274,9 @@ public abstract class GamePanel extends JPanel{
 		piecesBoard[newPosition.x][newPosition.y]=piece;
 		piecesBoard[piece.pos.x][piece.pos.y] =null;
 		piece.pos=newPosition;
-		
+		piece.notMoved = false;
 		SideColor c =piece.color.swapColor();
+		
 	
 		boolean isCheck =check(piecesBoard ,c);
 		if(!isCheck) {
