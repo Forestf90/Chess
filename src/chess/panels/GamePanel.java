@@ -262,18 +262,34 @@ public abstract class GamePanel extends JPanel{
 		}else return;
 	
 	}
-
+	public void castling(Position newPosition ,Chessman piece) {
+		if(piece.pos.x + newPosition.x == 6) {
+			Position rookNewposition = new Position(newPosition.x+1,newPosition.y);;
+			Position rookOldposition = new Position(0,newPosition.y);;
+			moveChessman(rookNewposition, piecesBoard[rookOldposition.x][rookOldposition.y] );
+		}
+		else if(piece.pos.x + newPosition.x == 10) {
+			Position rookNewposition = new Position(newPosition.x-1,newPosition.y);;
+			Position rookOldposition = new Position(7,newPosition.y);;
+			moveChessman(rookNewposition, piecesBoard[rookOldposition.x][rookOldposition.y] );
+		}
+	}
 
 	public void moveChessman(Position newPosition ,Chessman piece) {
 		lastMove.clear();
 		lastMove.add(piece.pos);
 		lastMove.add(newPosition);
 		
+		if(piece instanceof King) {							
+			castling(newPosition ,piece);
+		}
+		
 		piecesBoard[newPosition.x][newPosition.y]=piece;
 		piecesBoard[piece.pos.x][piece.pos.y] =null;
 		piece.pos=newPosition;
-		
+		piece.notMoved = false;
 		SideColor c =piece.color.swapColor();
+		
 	
 		boolean isCheck =check(piecesBoard ,c);
 		if(!isCheck) {
@@ -284,6 +300,7 @@ public abstract class GamePanel extends JPanel{
 			checkPosition = findKing(piecesBoard ,c);
 			checkmate(piece.color.swapColor() , piecesBoard);
 		}
+		
 		
 		
 		//else checkPosition.add(kingPosition);
