@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
+import chess.Menu;
 import chess.Position;
 import chess.SideColor;
 import chess.pieces.Chessman;
@@ -15,6 +17,8 @@ import javax.swing.JOptionPane;
 public class GamePanelAI extends GamePanel{
 
 	
+	public boolean playerWhite;
+	
 	public GamePanelAI() {
 		chooseColor();
 	}
@@ -22,28 +26,41 @@ public class GamePanelAI extends GamePanel{
 		Object[] options = { "White", "Black" };
 		int response =JOptionPane.showOptionDialog(null,"Chose color you want to play","Chose your color",
 				JOptionPane.YES_NO_OPTION ,JOptionPane.INFORMATION_MESSAGE,null,options, options[0]);
-		
-		
-	    if (response == JOptionPane.NO_OPTION) {
-	    	//tu chyba blokowalem ruch druga strona - nie pamietam - tez napraw xD
-            oponentTurn();
-            
+				
+		if (response == 0) {
+			playerWhite = true;  
+			whiteMove^=false;
 	    } 
-	        else if (response == JOptionPane.YES_OPTION) {
-	        	
+		if (response == 1) {
+	        playerWhite = false; 
+	        whiteMove^=true;
 	    } 
-	        else if (response == JOptionPane.CLOSED_OPTION) {
-
+	    else  {    	
+	        //SwingUtilities.windowForComponent(this).dispose();
 	    }
+
 	}
 	@Override
 	void oponentTurn() {
-		// napraw zeby bot umial grac bialymi
+		if(playerWhite==true) {
+			AIBlackTurn();
+		}
+		if(playerWhite==false) {
+			AIWhiteTurn();			
+		}		
+	}
+	
+	void AIBlackTurn() {
 		enabled= false;
 		AI(SideColor.BLACK);
 		enabled= true;
-		whiteMove^=false;
+		}
+	
+	void AIWhiteTurn() {
 		
+		enabled= false;
+		AI(SideColor.WHITE);
+		enabled= true;		
 	}
 	
 	public static int getRandom(int[] array) {
@@ -52,9 +69,7 @@ public class GamePanelAI extends GamePanel{
 	}
 	
 	void AI(SideColor col) {
-		//jak nie uzywasz to to wywal					
-		ArrayList<Position> allMovesList = getAllMoves(SideColor.BLACK,piecesBoard);
-		
+	
 		ArrayList<Position> pieceMoves = new ArrayList<Position>();
 		
 		
@@ -66,9 +81,9 @@ public class GamePanelAI extends GamePanel{
 		for(int i = 0; i <=7; i++){
 			for(int j = 0; j <=7; j++) {
 				if(piecesBoard[i][j] != null){				
-					if(piecesBoard[i][j].color == SideColor.BLACK){
+					if(piecesBoard[i][j].color == col){
 						//zmien na preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard ,piecesBoard[i][j])
-						if(piecesBoard[i][j].GetMoves(piecesBoard).size() > 0)
+						if(preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard ,piecesBoard[i][j]).size() >0)
 						{			
 							random = new Random().nextInt(100);
 							if(random > max)
@@ -78,25 +93,16 @@ public class GamePanelAI extends GamePanel{
 								oldposition.y = j;
 								//to
 								//no i tutaj tez jak w tym ife
-								pieceMoves = piecesBoard[i][j].GetMoves(piecesBoard);
-								random = new Random().nextInt(piecesBoard[i][j].GetMoves(piecesBoard).size());
+								pieceMoves = preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard ,piecesBoard[i][j]);
+								random = new Random().nextInt(preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard ,piecesBoard[i][j]).size());
 								newposition = pieceMoves.get(random);									
 							}	
 						}
 					}
 				}			
 			}
-		}
-		
-		//to trzeba zamienic zeby korzystalo z funkcji moveChessman inaczej funkcja szacha sie nie odpali
-		
-		piecesBoard[oldposition.x][oldposition.y].pos = newposition;
-		piecesBoard[newposition.x][newposition.y] = piecesBoard[oldposition.x][oldposition.y];
-		piecesBoard[oldposition.x][oldposition.y] = null;
-		
-			
-			
+		}		
+		moveChessman(newposition,piecesBoard[oldposition.x][oldposition.y]);							
 	}
 	
-
 }
