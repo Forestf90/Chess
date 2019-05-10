@@ -75,13 +75,13 @@ public class GamePanelLAN extends GamePanel {
 			socket =new Socket(ipAdd , port);
 			oos = new ObjectOutputStream(socket.getOutputStream());
 			ois = new ObjectInputStream(socket.getInputStream());
-			int input = JOptionPane.showConfirmDialog(null, 
+			 JOptionPane.showConfirmDialog(null, 
 	                "You play as Blacks", "Connected !", JOptionPane.DEFAULT_OPTION , JOptionPane.INFORMATION_MESSAGE);
 			oponentTurn();
 			createReciver();
 			
 		} catch (IOException e) {
-			
+			createServer(port);
 			//e.printStackTrace();
 		}
 	}
@@ -90,7 +90,6 @@ public class GamePanelLAN extends GamePanel {
 		reciver = new Thread() {
 			public synchronized void run() {
 				while(true) {
-					
 					try {
 						Chessman recChessman =  (Chessman) ois.readObject();
 						Position recPosition = (Position) ois.readObject();
@@ -104,7 +103,25 @@ public class GamePanelLAN extends GamePanel {
 				}
 			}
 		};
+		reciver.start();
 	}
+	public void createServer( int port) {
+		
+		try {
+			serverSocket = new ServerSocket(port);;
+			Socket s =serverSocket.accept();
+			oos = new ObjectOutputStream(s.getOutputStream());
+			ois = new ObjectInputStream(s.getInputStream());
+			createReciver();
+			JOptionPane.showConfirmDialog(null, 
+	                "You play as Whites", "Connected !", JOptionPane.DEFAULT_OPTION , JOptionPane.INFORMATION_MESSAGE);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	@Override
 	void oponentTurn() {
