@@ -64,9 +64,14 @@ public class Menu extends JFrame {
 		lan.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        new GameFrame(new GamePanelLAN());
-		        setVisible(false);
-		        dispose();
+		    	try {
+			        new GameFrame(new GamePanelLAN());
+			        setVisible(false);
+			        dispose();
+		    	}catch(Exception ee){
+		    		
+		    	}
+
 		    }
 	  });
 		
