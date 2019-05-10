@@ -1,7 +1,9 @@
 package chess.panels;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,12 +17,15 @@ import javax.swing.SpringLayout;
 
 import chess.GameFrame;
 import chess.Menu;
+import chess.Position;
+import chess.pieces.Chessman;
 
 public class GamePanelLAN extends GamePanel {
 
+	Thread reciver;
 	private Socket socket ;
-	private DataOutputStream dos;
-	private DataInputStream dis;
+	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
 	private ServerSocket serverSocket;
 	
 	
@@ -31,7 +36,6 @@ public class GamePanelLAN extends GamePanel {
 	
 	public void getSocketIP() {
 		JPanel p = new JPanel();
-		//p.setLayout(new SpringLayout());
 		  JTextField IPInput = new JTextField(10);
 		  JTextField PortInput = new JTextField(10);
 
@@ -45,8 +49,10 @@ public class GamePanelLAN extends GamePanel {
 				  if(IPInput.getText().isEmpty() || PortInput.getText().isEmpty()) {
 					  throw new UnknownHostException("Inputs cannot be empty");
 				  }
-					InetAddress ipadd=InetAddress.getByName(IPInput.getText());
+					InetAddress ipAdd=InetAddress.getByName(IPInput.getText());
 					int port = Integer.parseInt(PortInput.getText());
+//					socket =new Socket(ipAdd , port);
+					connect(ipAdd , port);
 				
 			} catch (Exception e) {
 				int input = JOptionPane.showConfirmDialog(null, 
@@ -61,9 +67,45 @@ public class GamePanelLAN extends GamePanel {
 			  gf.setVisible(false);
 		      gf.dispose();
 		  }
-
-		  
 	}
+	
+	
+	public void connect(InetAddress ipAdd , int port) {
+		try {
+			socket =new Socket(ipAdd , port);
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			ois = new ObjectInputStream(socket.getInputStream());
+			int input = JOptionPane.showConfirmDialog(null, 
+	                "You play as Blacks", "Connected !", JOptionPane.DEFAULT_OPTION , JOptionPane.INFORMATION_MESSAGE);
+			oponentTurn();
+			createReciver();
+			
+		} catch (IOException e) {
+			
+			//e.printStackTrace();
+		}
+	}
+	
+	public void createReciver() {
+		reciver = new Thread() {
+			public synchronized void run() {
+				while(true) {
+					
+					try {
+						Chessman recChessman =  (Chessman) ois.readObject();
+						Position recPosition = (Position) ois.readObject();
+						moveChessman(recPosition , recChessman);
+						oponentTurn();
+						
+					} catch ( ClassNotFoundException | IOException e) {
+						e.printStackTrace();
+					} 
+					
+				}
+			}
+		};
+	}
+	
 	@Override
 	void oponentTurn() {
 		// TODO Auto-generated method stub
