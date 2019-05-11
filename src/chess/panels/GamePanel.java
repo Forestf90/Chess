@@ -229,60 +229,68 @@ public abstract class GamePanel extends JPanel{
 			}
 		}
 	
-		if(contains) {
+		if(!contains) return;
 			
-			if(selected instanceof Pawn) {
-				((Pawn) selected).startPosition=false;
-				if(newPosition.y==7 || newPosition.y==0) {
-					String[] buttons = { "Rook", "Knight", "Bishop", "Queen" };    
-					int result = JOptionPane.showOptionDialog(null,  "Promote your Pawn to:","Promotion",
-					        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[3]);
-					
-	
-					switch(result) {
-					case 0:
-						selected=new Rook(selected.color , selected.pos.x,selected.pos.y);
-						break;
-					case 1:
-						selected=new Knight(selected.color , selected.pos.x,selected.pos.y);
-						break;
-					case 2:
-						selected=new Bishop(selected.color , selected.pos.x,selected.pos.y);
-						break;
-					case 3:
-						selected=new Queen(selected.color , selected.pos.x,selected.pos.y);
-						break;
-					}
-				}
-			}
-			moveChessman(newPosition , selected);
-			//selected.pos=null;
-			oponentTurn();
+//		if(selected instanceof Pawn) {
+//			((Pawn) selected).startPosition=false;
+//			if(newPosition.y==7 || newPosition.y==0) {
+//				String[] buttons = { "Rook", "Knight", "Bishop", "Queen" };    
+//				int result = JOptionPane.showOptionDialog(null,  "Promote your Pawn to:","Promotion",
+//				        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[3]);
+//				
+//
+//				switch(result) {
+//				case 0:
+//					selected=new Rook(selected.color , selected.pos.x,selected.pos.y);
+//					break;
+//				case 1:
+//					selected=new Knight(selected.color , selected.pos.x,selected.pos.y);
+//					break;
+//				case 2:
+//					selected=new Bishop(selected.color , selected.pos.x,selected.pos.y);
+//					break;
+//				case 3:
+//					selected=new Queen(selected.color , selected.pos.x,selected.pos.y);
+//					break;
+//				}
+//			}
+//		}
+		moveChessman(newPosition , selected.pos);
+		//selected.pos=null;
+		oponentTurn();
 			
-		}else return;
+
 	
 	}
 	public void castling(Position newPosition ,Chessman piece) {
 		if(piece.pos.x + newPosition.x == 6) {
 			Position rookNewposition = new Position(newPosition.x+1,newPosition.y);;
 			Position rookOldposition = new Position(0,newPosition.y);;
-			moveChessman(rookNewposition, piecesBoard[rookOldposition.x][rookOldposition.y] );
+			moveChessman(rookNewposition, rookOldposition );
 		}
 		else if(piece.pos.x + newPosition.x == 10) {
 			Position rookNewposition = new Position(newPosition.x-1,newPosition.y);;
 			Position rookOldposition = new Position(7,newPosition.y);;
-			moveChessman(rookNewposition, piecesBoard[rookOldposition.x][rookOldposition.y] );
+			moveChessman(rookNewposition, rookOldposition );
 		}
 	}
 
-	public void moveChessman(Position newPosition ,Chessman piece) {
+	public void moveChessman(Position newPosition ,Position currentPosition) {
 		lastMove.clear();
-		lastMove.add(piece.pos);
+		lastMove.add(currentPosition);
 		lastMove.add(newPosition);
-		
+		Chessman piece = piecesBoard[currentPosition.x][currentPosition.y];
 		if(piece instanceof King) {							
 			castling(newPosition ,piece);
 		}
+		else if(piece instanceof Pawn) {
+			((Pawn) piece).startPosition=false;
+				if(newPosition.y==7 || newPosition.y==0) {
+					Position tempP= piece.pos;
+					SideColor tempC= piece.color;
+					piece = new Queen(tempC , tempP.x , tempP.y);
+					}
+			}
 		
 		piecesBoard[newPosition.x][newPosition.y]=piece;
 		piecesBoard[piece.pos.x][piece.pos.y] =null;

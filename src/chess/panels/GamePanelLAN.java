@@ -91,13 +91,20 @@ public class GamePanelLAN extends GamePanel {
 			public synchronized void run() {
 				while(true) {
 					try {
-						Chessman recChessman =  (Chessman) ois.readObject();
-						Position recPosition = (Position) ois.readObject();
-						moveChessman(recPosition , recChessman);
+						Position recPositionOld =  (Position) ois.readObject();
+						Position recPositionNew = (Position) ois.readObject();
+						moveChessman(recPositionNew , recPositionOld);
 						oponentTurn();
 						
 					} catch ( ClassNotFoundException | IOException e) {
-						e.printStackTrace();
+						JOptionPane.showConfirmDialog(null, 
+				                "Connection is lost. The game is over", "Disconection",
+				                JOptionPane.DEFAULT_OPTION , JOptionPane.ERROR_MESSAGE);
+						
+//						GameFrame gf =((GameFrame) super.getParent());
+//						  gf.setVisible(false);
+//					      gf.dispose();
+						//e.printStackTrace();
 					} 
 					
 				}
@@ -121,6 +128,31 @@ public class GamePanelLAN extends GamePanel {
 			e.printStackTrace();
 		}
 	}
+	public void sendData(Position newPosition ,Position odlPosition) {
+		
+		try {
+			//Class g = piece.getClass();
+			oos.writeObject(odlPosition);
+			oos.flush();
+			oos.writeObject(newPosition);
+			oos.flush();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	@Override
+	public void checkChessmanMove(Position newPosition) {
+		
+		super.checkChessmanMove(newPosition);
+		
+		sendData(newPosition , lastMove.get(0));
+		
+		
+	}
+	
+
 	
 	
 	@Override
