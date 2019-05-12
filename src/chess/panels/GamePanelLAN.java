@@ -9,11 +9,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.SwingUtilities;
 
 import chess.GameFrame;
 import chess.Menu;
@@ -77,6 +79,7 @@ public class GamePanelLAN extends GamePanel {
 			ois = new ObjectInputStream(socket.getInputStream());
 			 JOptionPane.showConfirmDialog(null, 
 	                "You play as Blacks", "Connected !", JOptionPane.DEFAULT_OPTION , JOptionPane.INFORMATION_MESSAGE);
+			whiteMove =false;
 			oponentTurn();
 			createReciver();
 			
@@ -94,14 +97,17 @@ public class GamePanelLAN extends GamePanel {
 						Position recPositionOld =  (Position) ois.readObject();
 						Position recPositionNew = (Position) ois.readObject();
 						moveChessman(recPositionNew , recPositionOld);
-						oponentTurn();
+						repaint();
+						enabled=true;
 						
 					} catch ( ClassNotFoundException | IOException e) {
 						JOptionPane.showConfirmDialog(null, 
 				                "Connection is lost. The game is over", "Disconection",
 				                JOptionPane.DEFAULT_OPTION , JOptionPane.ERROR_MESSAGE);
-						
-//						GameFrame gf =((GameFrame) super.getParent());
+						closeFrame();
+						break;
+//						JPanel gp =((JPanel) getParent());
+//						JFrame gf = (JFrame) gp.getParent();
 //						  gf.setVisible(false);
 //					      gf.dispose();
 						//e.printStackTrace();
@@ -136,6 +142,7 @@ public class GamePanelLAN extends GamePanel {
 			oos.flush();
 			oos.writeObject(newPosition);
 			oos.flush();
+			oponentTurn();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -151,10 +158,15 @@ public class GamePanelLAN extends GamePanel {
 		
 		
 	}
-	
-
-	
-	
+	public void closeFrame() {
+		socket=null;
+		serverSocket=null;
+		//JPanel gp =((JPanel) getParent());
+		
+		JFrame gf = (JFrame) SwingUtilities.getWindowAncestor(this);
+		  gf.setVisible(false);
+	      gf.dispose();
+	}
 	@Override
 	void oponentTurn() {
 		// TODO Auto-generated method stub
