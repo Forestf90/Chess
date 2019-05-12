@@ -12,7 +12,7 @@ public class Rook extends Chessman {
 		color =col;
 		pos= new Position(x ,y);
 		notMoved= true;
-		
+		Value = 525;
 		loadImage();
 		
 		

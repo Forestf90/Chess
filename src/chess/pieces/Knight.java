@@ -10,7 +10,7 @@ public class Knight extends Chessman {
 	public Knight(SideColor col , int x , int y) {
 		color =col;
 		pos= new Position(x ,y);
-		
+		Value = 350;
 		loadImage();
 		
 	}

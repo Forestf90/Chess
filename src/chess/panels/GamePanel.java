@@ -259,9 +259,9 @@ public abstract class GamePanel extends JPanel{
 			//selected.pos=null;
 			oponentTurn();
 			
-		}else return;
-	
+		}else return;	
 	}
+	
 	public void castling(Position newPosition ,Chessman piece) {
 		if(piece.pos.x + newPosition.x == 6) {
 			Position rookNewposition = new Position(newPosition.x+1,newPosition.y);;

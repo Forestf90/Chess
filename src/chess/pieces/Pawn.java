@@ -12,7 +12,7 @@ public class Pawn extends Chessman {
 	public Pawn(SideColor col , int x , int y) {
 		color =col;
 		pos= new Position(x ,y);
-		
+		Value = 100;
 		loadImage();
 	}
 	

@@ -12,6 +12,7 @@ public class King extends Chessman {
 		color = col;
 		pos = new Position(x, y);
 		notMoved= true;
+		Value = 10000;
 		loadImage();
 
 	}

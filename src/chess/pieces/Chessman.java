@@ -21,6 +21,7 @@ public abstract class Chessman {
 	public SideColor color;
 	public boolean notMoved;
 	public Position pos;
+	public int Value;
 	
 	protected void loadImage() {
 		
