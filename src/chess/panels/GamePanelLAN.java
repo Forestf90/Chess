@@ -7,7 +7,9 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -20,17 +22,20 @@ import javax.swing.SwingUtilities;
 import chess.GameFrame;
 import chess.Menu;
 import chess.Position;
+import chess.SideColor;
 import chess.pieces.Chessman;
 
 public class GamePanelLAN extends GamePanel {
 
+	
 	Thread reciver;
+	boolean reciving= false;
 	private Socket socket ;
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
 	private ServerSocket serverSocket;
 	
-	
+	static Semaphore mutex = new Semaphore(1);
 	
 	public GamePanelLAN() {
 		getSocketIP();
@@ -94,23 +99,25 @@ public class GamePanelLAN extends GamePanel {
 			public synchronized void run() {
 				while(true) {
 					try {
+						//mutex.acquire();
+						if(socket==null && serverSocket ==null) return;
 						Position recPositionOld =  (Position) ois.readObject();
 						Position recPositionNew = (Position) ois.readObject();
+						reciving= true;
+//						threadMoveChess(recPositionNew , recPositionOld);
 						moveChessman(recPositionNew , recPositionOld);
+						reciving =false;
 						repaint();
 						enabled=true;
-						
-					} catch ( ClassNotFoundException | IOException e) {
+
+					} catch ( ClassNotFoundException | IOException  e) {
+						//e.printStackTrace();
+						if(endGame) return;
 						JOptionPane.showConfirmDialog(null, 
 				                "Connection is lost. The game is over", "Disconection",
 				                JOptionPane.DEFAULT_OPTION , JOptionPane.ERROR_MESSAGE);
 						closeFrame();
 						break;
-//						JPanel gp =((JPanel) getParent());
-//						JFrame gf = (JFrame) gp.getParent();
-//						  gf.setVisible(false);
-//					      gf.dispose();
-						//e.printStackTrace();
 					} 
 					
 				}
@@ -130,46 +137,65 @@ public class GamePanelLAN extends GamePanel {
 	                "You play as Whites", "Connected !", JOptionPane.DEFAULT_OPTION , JOptionPane.INFORMATION_MESSAGE);
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	public void sendData(Position newPosition ,Position odlPosition) {
+	public void sendData(Position newPosition ,Position oldPosition) {
 		
 		try {
-			//Class g = piece.getClass();
-			oos.writeObject(odlPosition);
+			oos.writeObject(oldPosition);
 			oos.flush();
 			oos.writeObject(newPosition);
 			oos.flush();
 			oponentTurn();
-			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
+	public void threadMoveChess(Position newPosition ,Position currentPosition) {
+		reciving=true;
+		super.moveChessman(newPosition, currentPosition);
+		reciving=false;
+	}
 	@Override
-	public void checkChessmanMove(Position newPosition) {
-		
-		super.checkChessmanMove(newPosition);
-		
-		sendData(newPosition , lastMove.get(0));
-		
-		
+	public void moveChessman(Position newPosition ,Position currentPosition) {
+		if(!reciving)sendData(newPosition , currentPosition);
+		super.moveChessman(newPosition, currentPosition);
+		//mutex.release();
 	}
+	
+	@Override
 	public void closeFrame() {
-		socket=null;
-		serverSocket=null;
-		//JPanel gp =((JPanel) getParent());
-		
-		JFrame gf = (JFrame) SwingUtilities.getWindowAncestor(this);
-		  gf.setVisible(false);
-	      gf.dispose();
+		resetSockets();
+		super.closeFrame();
 	}
+
+	
+	public void resetSockets() {
+		try {
+			if(oos!=null) {
+				oos.close();
+				ois.close();
+				oos=null;
+				ois=null;
+			}
+			if(socket!=null) {
+				socket.close();
+				socket=null;
+			}
+			if(serverSocket!=null) {
+				serverSocket.close();
+				serverSocket=null;
+			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	
 	@Override
 	void oponentTurn() {
-		// TODO Auto-generated method stub
 		enabled=false;
 	}
 

@@ -37,6 +37,7 @@ public abstract class GamePanel extends JPanel{
 	ArrayList<Position> lastMove;
 	Position checkPosition;
 	Chessman selected;
+	boolean endGame=false;
 	protected Position focus;
 	public Chessman[][] piecesBoard;
 	
@@ -162,7 +163,6 @@ public abstract class GamePanel extends JPanel{
 	public void MouseListner() {
 		 addMouseListener(new MouseAdapter(){ 
 	         public void mousePressed(MouseEvent me) { 
-	           //blokowanie(me.getX() ,me.getY());
 	        	 int tempX =me.getX()/SQUARE_SIZE;
 	        	 int tempY =me.getY()/SQUARE_SIZE;
 	        	 if((piecesBoard[tempX][tempY]==null && selected==null) || !enabled) return;
@@ -206,8 +206,6 @@ public abstract class GamePanel extends JPanel{
 	
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 			 
 		 });
@@ -215,10 +213,6 @@ public abstract class GamePanel extends JPanel{
 	}
 
 	public void checkChessmanMove(Position newPosition) {
-		if(piecesBoard[newPosition.x][newPosition.y]!=null) {
-			//piecesBoard[newPosition.x][newPosition.y]=null;
-			//TODO Add pieces to hit list
-		}
 		boolean contains= false;
 		
 		for(Position m : possibleMoves) {
@@ -230,33 +224,7 @@ public abstract class GamePanel extends JPanel{
 		}
 	
 		if(!contains) return;
-			
-//		if(selected instanceof Pawn) {
-//			((Pawn) selected).startPosition=false;
-//			if(newPosition.y==7 || newPosition.y==0) {
-//				String[] buttons = { "Rook", "Knight", "Bishop", "Queen" };    
-//				int result = JOptionPane.showOptionDialog(null,  "Promote your Pawn to:","Promotion",
-//				        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[3]);
-//				
-//
-//				switch(result) {
-//				case 0:
-//					selected=new Rook(selected.color , selected.pos.x,selected.pos.y);
-//					break;
-//				case 1:
-//					selected=new Knight(selected.color , selected.pos.x,selected.pos.y);
-//					break;
-//				case 2:
-//					selected=new Bishop(selected.color , selected.pos.x,selected.pos.y);
-//					break;
-//				case 3:
-//					selected=new Queen(selected.color , selected.pos.x,selected.pos.y);
-//					break;
-//				}
-//			}
-//		}
 		moveChessman(newPosition , selected.pos);
-		//selected.pos=null;
 		oponentTurn();
 			
 
@@ -273,8 +241,10 @@ public abstract class GamePanel extends JPanel{
 			Position rookOldposition = new Position(7,newPosition.y);;
 			moveChessman(rookNewposition, rookOldposition );
 		}
+		lastMove.clear();
+		lastMove.add(piece.pos);
+		lastMove.add(newPosition);
 	}
-
 	public void moveChessman(Position newPosition ,Position currentPosition) {
 		lastMove.clear();
 		lastMove.add(currentPosition);
@@ -308,10 +278,6 @@ public abstract class GamePanel extends JPanel{
 			checkPosition = findKing(piecesBoard ,c);
 			checkmate(piece.color.swapColor() , piecesBoard);
 		}
-		
-		
-		
-		//else checkPosition.add(kingPosition);
 	}
 
 
@@ -390,13 +356,13 @@ public abstract class GamePanel extends JPanel{
 		ArrayList<Position> any = getAllSafeMoves(col , board);
 		
 		if(any.isEmpty()) {
+			endGame=true;
 			possibleMoves.clear();
 			repaint();
 			JOptionPane.showMessageDialog(null,col.getBetterString() +" King is checkmate. "+col.swapColor().getBetterString()+
 					"s wins. " ,
 					"Checkmate",JOptionPane.INFORMATION_MESSAGE);
-			new Menu();
-			SwingUtilities.windowForComponent(this).dispose();
+			closeFrame();
 		}
 	}
 	
@@ -408,10 +374,14 @@ public abstract class GamePanel extends JPanel{
 			repaint();
 			JOptionPane.showMessageDialog(null,col.getBetterString() +"s have no more available moves. The game ends with a draw. " ,
 					"Stalemate",JOptionPane.INFORMATION_MESSAGE);
-			new Menu();
-			SwingUtilities.windowForComponent(this).dispose();
+			closeFrame();
+			
 		}
 		
+	}
+	public void closeFrame() {
+		new Menu();
+		SwingUtilities.windowForComponent(this).dispose();
 	}
 
 }
