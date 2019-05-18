@@ -383,33 +383,27 @@ public abstract class GamePanel extends JPanel{
 			Chessman[][] tempBoard = Arrays.stream(board).map(r -> r.clone()).toArray(Chessman[][]::new);			
 			tempBoard[piece.pos.x][piece.pos.y]=null;
 			tempBoard[p.x][p.y]=piece;
-			boolean isCheck = check(tempBoard, piece.color);
-			if(isCheck)
-				i.remove();				
-			else if(piece instanceof King && piece.notMoved == true) {
+			if(check(tempBoard, piece.color))
+				i.remove();	
+			else if(piece instanceof King && piece.notMoved == true && (p.x == 2 || p.x == 6)) {
 				if(preventCheckCastling(p, tempBoard, piece) == true){					
-					i.remove();						
+					i.remove();
 				}
 			}
+			
 		}			
 		return moves;
 	}
 
 	public boolean preventCheckCastling(Position p, Chessman tempBoard[][], Chessman piece)
 	{
-		if(p.x == 2)
-		{
-			tempBoard[piece.pos.x][piece.pos.y]=null;
-			tempBoard[p.x+1][p.y]=piece;	
-			return check(tempBoard, piece.color);
-		}
-		if(p.x == 6)
-		{
-			tempBoard[piece.pos.x][piece.pos.y]=null;
+
+
+			tempBoard[piece.pos.x][piece.pos.y]=null;			
 			tempBoard[p.x-1][p.y]=piece;
 			return check(tempBoard, piece.color);
-		}
-		return false;
+		
+
 	}
 	
 	
