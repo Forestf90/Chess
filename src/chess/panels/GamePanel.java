@@ -363,7 +363,7 @@ public abstract class GamePanel extends JPanel{
 		return false;
 	}
 
-	public ArrayList<Position> preventCheck(ArrayList<Position> moves , Chessman board[][], Chessman piece){
+	public static ArrayList<Position> preventCheck(ArrayList<Position> moves , Chessman board[][], Chessman piece){
 		
 		Iterator<Position> i = moves.iterator();
 		while(i.hasNext()) {
