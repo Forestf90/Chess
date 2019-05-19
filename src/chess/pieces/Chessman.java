@@ -3,15 +3,16 @@ package chess.pieces;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
 import chess.Position;
 import chess.SideColor;
-import chess.panels.GamePanel;
+
+
 
 public abstract class Chessman {
 

@@ -18,6 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
+
 import chess.Menu;
 import chess.Position;
 import chess.SideColor;
@@ -37,6 +39,7 @@ public abstract class GamePanel extends JPanel{
 	ArrayList<Position> lastMove;
 	Position checkPosition;
 	Chessman selected;
+	boolean endGame=false;
 	protected Position focus;
 	public Chessman[][] piecesBoard;
 	
@@ -162,7 +165,6 @@ public abstract class GamePanel extends JPanel{
 	public void MouseListner() {
 		 addMouseListener(new MouseAdapter(){ 
 	         public void mousePressed(MouseEvent me) { 
-	           //blokowanie(me.getX() ,me.getY());
 	        	 int tempX =me.getX()/SQUARE_SIZE;
 	        	 int tempY =me.getY()/SQUARE_SIZE;
 	        	 if((piecesBoard[tempX][tempY]==null && selected==null) || !enabled) return;
@@ -206,8 +208,6 @@ public abstract class GamePanel extends JPanel{
 	
 			@Override
 			public void mouseDragged(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 			 
 		 });
@@ -215,10 +215,6 @@ public abstract class GamePanel extends JPanel{
 	}
 
 	public void checkChessmanMove(Position newPosition) {
-		if(piecesBoard[newPosition.x][newPosition.y]!=null) {
-			//piecesBoard[newPosition.x][newPosition.y]=null;
-			//TODO Add pieces to hit list
-		}
 		boolean contains= false;
 		
 		for(Position m : possibleMoves) {
@@ -229,60 +225,62 @@ public abstract class GamePanel extends JPanel{
 			}
 		}
 	
-		if(contains) {
+		if(!contains) return;
+		moveChessman(newPosition , selected.pos);
+		oponentTurn();
 			
-			if(selected instanceof Pawn) {
-				((Pawn) selected).startPosition=false;
-				if(newPosition.y==7 || newPosition.y==0) {
-					String[] buttons = { "Rook", "Knight", "Bishop", "Queen" };    
-					int result = JOptionPane.showOptionDialog(null,  "Promote your Pawn to:","Promotion",
-					        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[3]);
-					
+
 	
-					switch(result) {
-					case 0:
-						selected=new Rook(selected.color , selected.pos.x,selected.pos.y);
-						break;
-					case 1:
-						selected=new Knight(selected.color , selected.pos.x,selected.pos.y);
-						break;
-					case 2:
-						selected=new Bishop(selected.color , selected.pos.x,selected.pos.y);
-						break;
-					case 3:
-						selected=new Queen(selected.color , selected.pos.x,selected.pos.y);
-						break;
-					}
-				}
-			}
-			moveChessman(newPosition , selected);
-			//selected.pos=null;
-			oponentTurn();
-			
-		}else return;	
+
 	}
 	
 	public void castling(Position newPosition ,Chessman piece) {
 		if(piece.pos.x + newPosition.x == 6) {
-			Position rookNewposition = new Position(newPosition.x+1,newPosition.y);;
-			Position rookOldposition = new Position(0,newPosition.y);;
-			moveChessman(rookNewposition, piecesBoard[rookOldposition.x][rookOldposition.y] );
+
+			Position rookNewposition = new Position(newPosition.x+1,newPosition.y);
+			Position rookOldposition = new Position(0,newPosition.y);
+			if(piecesBoard[rookOldposition.x][rookOldposition.y].notMoved ){				
+				if(piecesBoard[piece.pos.x][piece.pos.y].notMoved){
+					Chessman rook = piecesBoard[rookOldposition.x][rookOldposition.y];
+					piecesBoard[rookNewposition.x][rookNewposition.y]=rook;
+					piecesBoard[rookOldposition.x][rookOldposition.y] =null;
+					rook.pos=rookNewposition;
+					rook.notMoved = false;
+				}
+			}
 		}
 		else if(piece.pos.x + newPosition.x == 10) {
-			Position rookNewposition = new Position(newPosition.x-1,newPosition.y);;
-			Position rookOldposition = new Position(7,newPosition.y);;
-			moveChessman(rookNewposition, piecesBoard[rookOldposition.x][rookOldposition.y] );
+			Position rookNewposition = new Position(newPosition.x-1,newPosition.y);
+			Position rookOldposition = new Position(7,newPosition.y);
+			if(piecesBoard[rookOldposition.x][rookOldposition.y].notMoved == true){				
+				if(piecesBoard[piece.pos.x][piece.pos.y].notMoved == true){
+					Chessman rook = piecesBoard[rookOldposition.x][rookOldposition.y];
+					piecesBoard[rookNewposition.x][rookNewposition.y]=rook;
+					piecesBoard[rookOldposition.x][rookOldposition.y] =null;
+					rook.pos=rookNewposition;
+					rook.notMoved = false;
+				}
+			}
 		}
 	}
-
-	public void moveChessman(Position newPosition ,Chessman piece) {
-		lastMove.clear();
-		lastMove.add(piece.pos);
-		lastMove.add(newPosition);
 		
-		if(piece instanceof King) {							
+	public void moveChessman(Position newPosition ,Position oldPosition) {
+		lastMove.clear();
+		lastMove.add(oldPosition);
+		lastMove.add(newPosition);
+		Chessman piece = piecesBoard[oldPosition.x][oldPosition.y];
+		
+		if(piece instanceof King) {				
 			castling(newPosition ,piece);
 		}
+		else if(piece instanceof Pawn) {
+			((Pawn) piece).startPosition=false;
+				if(newPosition.y==7 || newPosition.y==0) {
+					Position tempP= piece.pos;
+					SideColor tempC= piece.color;
+					piece = new Queen(tempC , tempP.x , tempP.y);
+					}
+			}
 		
 		piecesBoard[newPosition.x][newPosition.y]=piece;
 		piecesBoard[piece.pos.x][piece.pos.y] =null;
@@ -300,10 +298,6 @@ public abstract class GamePanel extends JPanel{
 			checkPosition = findKing(piecesBoard ,c);
 			checkmate(piece.color.swapColor() , piecesBoard);
 		}
-		
-		
-		
-		//else checkPosition.add(kingPosition);
 	}
 
 
@@ -340,7 +334,7 @@ public abstract class GamePanel extends JPanel{
 			for(int j=0 ; j<board[i].length;j++) {
 				if(board[i][j]!=null) {
 					if(board[i][j] instanceof King && board[i][j].color==col){
-						kingPosition =new Position(i,j);
+						return new Position(i,j);
 					}
 				}
 			}
@@ -353,6 +347,7 @@ public abstract class GamePanel extends JPanel{
 		SideColor c =col.swapColor();
 		
 		ArrayList<Position> enemyMoves =getAllMoves(c ,board);
+		
 		
 		for(Position p : enemyMoves) {
 			if(kingPosition.x==p.x &&kingPosition.y==p.y) {
@@ -369,26 +364,52 @@ public abstract class GamePanel extends JPanel{
 		while(i.hasNext()) {
 			Position p = i.next();
 			
-			Chessman[][] tempBoard = Arrays.stream(board).map(r -> r.clone()).toArray(Chessman[][]::new);
+			Chessman[][] tempBoard = Arrays.stream(board).map(r -> r.clone()).toArray(Chessman[][]::new);			
 			tempBoard[piece.pos.x][piece.pos.y]=null;
 			tempBoard[p.x][p.y]=piece;
 			boolean isCheck = check(tempBoard, piece.color);
-			if(isCheck)i.remove();
-		}
+			if(isCheck)
+				i.remove();				
+			else if(piece instanceof King && piece.notMoved) {
+				if(preventCheckCastling(p, tempBoard, piece)){					
+					i.remove();						
+				}
+			}
+			
+		}			
 		return moves;
 	}
 
+	public static boolean preventCheckCastling(Position p, Chessman tempBoard[][], Chessman piece)
+	{
+		if(p.x == 2)
+		{
+			tempBoard[p.x][p.y]=null;
+			tempBoard[p.x+1][p.y]=piece;	
+			return check(tempBoard, piece.color);
+		}
+		else if(p.x == 6)
+		{
+			tempBoard[p.x][p.y]=null;
+			tempBoard[p.x-1][p.y]=piece;
+			return check(tempBoard, piece.color);
+		}
+		else return false;
+
+	}
+	
+	
 	public void checkmate(SideColor col , Chessman[][] board) {
 		ArrayList<Position> any = getAllSafeMoves(col , board);
 		
 		if(any.isEmpty()) {
+			endGame=true;
 			possibleMoves.clear();
 			repaint();
 			JOptionPane.showMessageDialog(null,col.getBetterString() +" King is checkmate. "+col.swapColor().getBetterString()+
 					"s wins. " ,
 					"Checkmate",JOptionPane.INFORMATION_MESSAGE);
-			new Menu();
-			SwingUtilities.windowForComponent(this).dispose();
+			closeFrame();
 		}
 	}
 	
@@ -400,10 +421,14 @@ public abstract class GamePanel extends JPanel{
 			repaint();
 			JOptionPane.showMessageDialog(null,col.getBetterString() +"s have no more available moves. The game ends with a draw. " ,
 					"Stalemate",JOptionPane.INFORMATION_MESSAGE);
-			new Menu();
-			SwingUtilities.windowForComponent(this).dispose();
+			closeFrame();
+			
 		}
 		
+	}
+	public void closeFrame() {
+		new Menu();
+		SwingUtilities.windowForComponent(this).dispose();
 	}
 
 }
