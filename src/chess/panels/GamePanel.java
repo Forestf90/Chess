@@ -399,6 +399,7 @@ public abstract class GamePanel extends JPanel{
 					i.remove();						
 				}
 			}
+			
 		}			
 		return moves;
 	}
@@ -418,6 +419,7 @@ public abstract class GamePanel extends JPanel{
 			return check(tempBoard, piece.color);
 		}
 		else return false;
+
 	}
 	
 	
