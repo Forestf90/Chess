@@ -266,20 +266,28 @@ public abstract class GamePanel extends JPanel{
 	}
 	public void castling(Position newPosition ,Chessman piece) {
 		if(piece.pos.x + newPosition.x == 6) {
-			Position rookNewposition = new Position(newPosition.x+1,newPosition.y);;
-			Position rookOldposition = new Position(0,newPosition.y);;
-			if(piecesBoard[rookOldposition.x][rookOldposition.y].notMoved == true){				
-				if(piecesBoard[piece.pos.x][piece.pos.y].notMoved == true){
-					moveChessman(rookNewposition, piecesBoard[rookOldposition.x][rookOldposition.y] );									
+			Position rookNewposition = new Position(newPosition.x+1,newPosition.y);
+			Position rookOldposition = new Position(0,newPosition.y);
+			if(piecesBoard[rookOldposition.x][rookOldposition.y].notMoved ){				
+				if(piecesBoard[piece.pos.x][piece.pos.y].notMoved){
+					Chessman rook = piecesBoard[rookOldposition.x][rookOldposition.y];
+					piecesBoard[rookNewposition.x][rookNewposition.y]=rook;
+					piecesBoard[rookOldposition.x][rookOldposition.y] =null;
+					rook.pos=rookNewposition;
+					rook.notMoved = false;
 				}
 			}
 		}
 		else if(piece.pos.x + newPosition.x == 10) {
-			Position rookNewposition = new Position(newPosition.x-1,newPosition.y);;
-			Position rookOldposition = new Position(7,newPosition.y);;
+			Position rookNewposition = new Position(newPosition.x-1,newPosition.y);
+			Position rookOldposition = new Position(7,newPosition.y);
 			if(piecesBoard[rookOldposition.x][rookOldposition.y].notMoved == true){				
 				if(piecesBoard[piece.pos.x][piece.pos.y].notMoved == true){
-					moveChessman(rookNewposition, piecesBoard[rookOldposition.x][rookOldposition.y] );
+					Chessman rook = piecesBoard[rookOldposition.x][rookOldposition.y];
+					piecesBoard[rookNewposition.x][rookNewposition.y]=rook;
+					piecesBoard[rookOldposition.x][rookOldposition.y] =null;
+					rook.pos=rookNewposition;
+					rook.notMoved = false;
 				}
 			}
 		}
@@ -350,7 +358,7 @@ public abstract class GamePanel extends JPanel{
 			for(int j=0 ; j<board[i].length;j++) {
 				if(board[i][j]!=null) {
 					if(board[i][j] instanceof King && board[i][j].color==col){
-						kingPosition =new Position(i,j);
+						return new Position(i,j);
 					}
 				}
 			}
@@ -386,8 +394,8 @@ public abstract class GamePanel extends JPanel{
 			boolean isCheck = check(tempBoard, piece.color);
 			if(isCheck)
 				i.remove();				
-			else if(piece instanceof King && piece.notMoved == true) {
-				if(preventCheckCastling(p, tempBoard, piece) == true){					
+			else if(piece instanceof King && piece.notMoved) {
+				if(preventCheckCastling(p, tempBoard, piece)){					
 					i.remove();						
 				}
 			}
@@ -399,17 +407,17 @@ public abstract class GamePanel extends JPanel{
 	{
 		if(p.x == 2)
 		{
-			tempBoard[piece.pos.x][piece.pos.y]=null;
+			tempBoard[p.x][p.y]=null;
 			tempBoard[p.x+1][p.y]=piece;	
 			return check(tempBoard, piece.color);
 		}
-		if(p.x == 6)
+		else if(p.x == 6)
 		{
-			tempBoard[piece.pos.x][piece.pos.y]=null;
+			tempBoard[p.x][p.y]=null;
 			tempBoard[p.x-1][p.y]=piece;
 			return check(tempBoard, piece.color);
 		}
-		return false;
+		else return false;
 	}
 	
 	
