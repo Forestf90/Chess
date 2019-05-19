@@ -260,9 +260,13 @@ public abstract class GamePanel extends JPanel{
 				}
 			}
 		}
+	}
+		
+	public void moveChessman(Position newPosition ,Position oldPosition) {
 		lastMove.clear();
-		lastMove.add(piece.pos);
+		lastMove.add(oldPosition);
 		lastMove.add(newPosition);
+		Chessman piece = piecesBoard[oldPosition.x][oldPosition.y];
 		
 		if(piece instanceof King) {				
 			castling(newPosition ,piece);
