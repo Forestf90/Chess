@@ -18,6 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
+
 import chess.Menu;
 import chess.Position;
 import chess.SideColor;
@@ -232,25 +234,37 @@ public abstract class GamePanel extends JPanel{
 	}
 	public void castling(Position newPosition ,Chessman piece) {
 		if(piece.pos.x + newPosition.x == 6) {
-			Position rookNewposition = new Position(newPosition.x+1,newPosition.y);;
-			Position rookOldposition = new Position(0,newPosition.y);;
-			moveChessman(rookNewposition, rookOldposition );
+
+			Position rookNewposition = new Position(newPosition.x+1,newPosition.y);
+			Position rookOldposition = new Position(0,newPosition.y);
+			if(piecesBoard[rookOldposition.x][rookOldposition.y].notMoved ){				
+				if(piecesBoard[piece.pos.x][piece.pos.y].notMoved){
+					Chessman rook = piecesBoard[rookOldposition.x][rookOldposition.y];
+					piecesBoard[rookNewposition.x][rookNewposition.y]=rook;
+					piecesBoard[rookOldposition.x][rookOldposition.y] =null;
+					rook.pos=rookNewposition;
+					rook.notMoved = false;
+				}
+			}
 		}
 		else if(piece.pos.x + newPosition.x == 10) {
-			Position rookNewposition = new Position(newPosition.x-1,newPosition.y);;
-			Position rookOldposition = new Position(7,newPosition.y);;
-			moveChessman(rookNewposition, rookOldposition );
+			Position rookNewposition = new Position(newPosition.x-1,newPosition.y);
+			Position rookOldposition = new Position(7,newPosition.y);
+			if(piecesBoard[rookOldposition.x][rookOldposition.y].notMoved == true){				
+				if(piecesBoard[piece.pos.x][piece.pos.y].notMoved == true){
+					Chessman rook = piecesBoard[rookOldposition.x][rookOldposition.y];
+					piecesBoard[rookNewposition.x][rookNewposition.y]=rook;
+					piecesBoard[rookOldposition.x][rookOldposition.y] =null;
+					rook.pos=rookNewposition;
+					rook.notMoved = false;
+				}
+			}
 		}
 		lastMove.clear();
 		lastMove.add(piece.pos);
 		lastMove.add(newPosition);
-	}
-	public void moveChessman(Position newPosition ,Position currentPosition) {
-		lastMove.clear();
-		lastMove.add(currentPosition);
-		lastMove.add(newPosition);
-		Chessman piece = piecesBoard[currentPosition.x][currentPosition.y];
-		if(piece instanceof King) {							
+		
+		if(piece instanceof King) {				
 			castling(newPosition ,piece);
 		}
 		else if(piece instanceof Pawn) {
@@ -314,7 +328,7 @@ public abstract class GamePanel extends JPanel{
 			for(int j=0 ; j<board[i].length;j++) {
 				if(board[i][j]!=null) {
 					if(board[i][j] instanceof King && board[i][j].color==col){
-						kingPosition =new Position(i,j);
+						return new Position(i,j);
 					}
 				}
 			}
@@ -327,6 +341,7 @@ public abstract class GamePanel extends JPanel{
 		SideColor c =col.swapColor();
 		
 		ArrayList<Position> enemyMoves =getAllMoves(c ,board);
+		
 		
 		for(Position p : enemyMoves) {
 			if(kingPosition.x==p.x &&kingPosition.y==p.y) {
@@ -343,15 +358,41 @@ public abstract class GamePanel extends JPanel{
 		while(i.hasNext()) {
 			Position p = i.next();
 			
-			Chessman[][] tempBoard = Arrays.stream(board).map(r -> r.clone()).toArray(Chessman[][]::new);
+			Chessman[][] tempBoard = Arrays.stream(board).map(r -> r.clone()).toArray(Chessman[][]::new);			
 			tempBoard[piece.pos.x][piece.pos.y]=null;
 			tempBoard[p.x][p.y]=piece;
 			boolean isCheck = check(tempBoard, piece.color);
-			if(isCheck)i.remove();
-		}
+			if(isCheck)
+				i.remove();				
+			else if(piece instanceof King && piece.notMoved) {
+				if(preventCheckCastling(p, tempBoard, piece)){					
+					i.remove();						
+				}
+			}
+			
+		}			
 		return moves;
 	}
 
+	public boolean preventCheckCastling(Position p, Chessman tempBoard[][], Chessman piece)
+	{
+		if(p.x == 2)
+		{
+			tempBoard[p.x][p.y]=null;
+			tempBoard[p.x+1][p.y]=piece;	
+			return check(tempBoard, piece.color);
+		}
+		else if(p.x == 6)
+		{
+			tempBoard[p.x][p.y]=null;
+			tempBoard[p.x-1][p.y]=piece;
+			return check(tempBoard, piece.color);
+		}
+		else return false;
+
+	}
+	
+	
 	public void checkmate(SideColor col , Chessman[][] board) {
 		ArrayList<Position> any = getAllSafeMoves(col , board);
 		
