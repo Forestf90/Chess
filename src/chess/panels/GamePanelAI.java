@@ -102,7 +102,7 @@ public class GamePanelAI extends GamePanel{
 				}			
 			}
 		}		
-		moveChessman(newposition,piecesBoard[oldposition.x][oldposition.y]);							
+		moveChessman(newposition,oldposition);							
 	}
 	
 }
