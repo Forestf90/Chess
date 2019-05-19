@@ -29,13 +29,12 @@ public class GamePanelLAN extends GamePanel {
 
 	
 	Thread reciver;
-	boolean reciving= false;
 	private Socket socket ;
 	private ObjectOutputStream oos;
 	private ObjectInputStream ois;
 	private ServerSocket serverSocket;
 	
-	static Semaphore mutex = new Semaphore(1);
+
 	
 	public GamePanelLAN() {
 		getSocketIP();
@@ -45,6 +44,8 @@ public class GamePanelLAN extends GamePanel {
 		JPanel p = new JPanel();
 		  JTextField IPInput = new JTextField(10);
 		  JTextField PortInput = new JTextField(10);
+		  PortInput.setText("1234");
+		  IPInput.setText("127.0.0.1");
 
 		  p.add(new JLabel("IP :"));
 		  p.add(IPInput);
@@ -99,14 +100,10 @@ public class GamePanelLAN extends GamePanel {
 			public synchronized void run() {
 				while(true) {
 					try {
-						//mutex.acquire();
 						if(socket==null && serverSocket ==null) return;
 						Position recPositionOld =  (Position) ois.readObject();
 						Position recPositionNew = (Position) ois.readObject();
-						reciving= true;
-//						threadMoveChess(recPositionNew , recPositionOld);
-						moveChessman(recPositionNew , recPositionOld);
-						reciving =false;
+						threadMoveChess(recPositionNew , recPositionOld);
 						repaint();
 						enabled=true;
 
@@ -154,15 +151,12 @@ public class GamePanelLAN extends GamePanel {
 	}
 
 	public void threadMoveChess(Position newPosition ,Position currentPosition) {
-		reciving=true;
 		super.moveChessman(newPosition, currentPosition);
-		reciving=false;
 	}
 	@Override
 	public void moveChessman(Position newPosition ,Position currentPosition) {
-		if(!reciving)sendData(newPosition , currentPosition);
 		super.moveChessman(newPosition, currentPosition);
-		//mutex.release();
+		sendData(newPosition, currentPosition);
 	}
 	
 	@Override
