@@ -7,9 +7,11 @@ import chess.SideColor;
 
 public class Rook extends Chessman {
 
+	
 	public Rook(SideColor col , int x , int y) {
 		color =col;
 		pos= new Position(x ,y);
+		notMoved= true;
 		
 		loadImage();
 		

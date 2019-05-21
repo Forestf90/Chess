@@ -1,6 +1,7 @@
 package chess;
 
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -44,13 +45,21 @@ public class Menu extends JFrame {
 		
 		name = new JLabel("Choose playing mode:");
 		hot = new JButton("Hot-Seat");
-		lan = new JButton("LAN");
+		lan = new JButton("Multiplayer");
 		ai = new JButton("AI");
 		
 		name.setFont(f);
 		hot.setFont(f);
 		lan.setFont(f);
 		ai.setFont(f);
+		
+		menuPanel.setBackground(Color.decode("#bb4446"));
+		hot.setBackground(Color.decode("#f1e4c1"));
+		hot.setOpaque(true);
+		lan.setBackground(Color.decode("#f1e4c1"));
+		lan.setOpaque(true);
+		ai.setBackground(Color.decode("#f1e4c1"));
+		ai.setOpaque(true);
 		
 		hot.addActionListener(new ActionListener() {
 		    @Override
@@ -64,9 +73,14 @@ public class Menu extends JFrame {
 		lan.addActionListener(new ActionListener() {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
-		        new GameFrame(new GamePanelLAN());
-		        setVisible(false);
-		        dispose();
+		    	try {
+			        new GameFrame(new GamePanelLAN());
+			        setVisible(false);
+			        dispose();
+		    	}catch(Exception ee){
+		    		
+		    	}
+
 		    }
 	  });
 		

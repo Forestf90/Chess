@@ -7,10 +7,11 @@ import chess.SideColor;
 
 public class King extends Chessman {
 
+	
 	public King(SideColor col, int x, int y) {
 		color = col;
 		pos = new Position(x, y);
-
+		notMoved= true;
 		loadImage();
 
 	}
@@ -114,7 +115,46 @@ public class King extends Chessman {
 			  Position(this.pos.x-1 ,this.pos.y)); }
 			 
 		}
-
+		
+		if (this.notMoved == true)
+		{
+			int pom = 1;
+			
+			while(this.pos.x-pom >= 0 ){
+				if(board[pos.x-pom][pos.y] != null){
+					if(board[pos.x-pom][pos.y] instanceof Rook) {
+						if(board[pos.x-pom][pos.y].notMoved == true) {
+							moves.add(new Position(this.pos.x - 2, this.pos.y));						
+							break;
+						}
+					}
+					else 					
+						break;					
+				}
+				pom++;
+			}		
+		}
+		
+		if (this.notMoved == true){
+			int pom = 1;
+			
+			while(this.pos.x+pom <= 7){
+				if(board[pos.x+pom][pos.y] != null){
+					if(board[pos.x+pom][pos.y] instanceof Rook) {
+						if(board[pos.x+pom][pos.y].notMoved == true) {
+							moves.add(new Position(this.pos.x + 2, this.pos.y));						
+							break;
+						}
+					}
+					else 					
+						break;					
+				}
+				pom++;
+			}			
+		}
+		
+		//board[pos.x+pom][pos.y].notMoved == true
+		
 		return moves;
 
 	}
