@@ -1,7 +1,8 @@
 # Chess
 Chess game implementation in java.
 Chess is strategy board game played on a checkered board with 64 squares arranged in an 8x8 grid
-    ![](https://i.imgur.com/UyUYqSX.png)
+
+![](https://i.imgur.com/UyUYqSX.png)
 
 White is starting game.
 Each piece has its own way of moving. Clicking the left mouse button shows the available movements.
@@ -15,6 +16,7 @@ The game interface is made in Java Swing
 
 ## Game modes
 Game has 3 modes
+
 ![](https://i.imgur.com/qEY2FFv.png)
 
 
@@ -33,5 +35,5 @@ AI is a single player mode in which we will face an opponent. Artificial intelli
 ## About
 This game was made by 2 students, as a team project.
 
-* Micha³‚ Œliwa (Forestf90)
+* Micha³ Œliwa (Forestf90)
 * Krzysztof Heller
