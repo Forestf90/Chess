@@ -10,15 +10,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 
 import chess.Menu;
 import chess.Position;
@@ -33,18 +34,22 @@ import chess.pieces.Rook;
 
 public abstract class GamePanel extends JPanel{
 	
-	protected BufferedImage boardImg;
+	private BufferedImage boardImg;
 	public int SQUARE_SIZE =64;
 	ArrayList<Position> possibleMoves;
 	ArrayList<Position> lastMove;
 	Position checkPosition;
 	Chessman selected;
+	
 	boolean endGame=false;
 	protected Position focus;
 	public Chessman[][] piecesBoard;
 	
+	private BufferedImage[] imgTable;
+	
 	public boolean whiteMove;
 	public boolean enabled;
+	
 	
 	abstract void oponentTurn();
 	
@@ -54,6 +59,7 @@ public abstract class GamePanel extends JPanel{
 		this.setPreferredSize(new Dimension(8*SQUARE_SIZE, 8*SQUARE_SIZE));
 		
 		piecesBoard = new Chessman[8][8];
+		imgTable = new BufferedImage[12];
 		possibleMoves=new ArrayList<Position>();
 		lastMove = new ArrayList<Position>();
 		focus = new Position(0,0);
@@ -62,6 +68,7 @@ public abstract class GamePanel extends JPanel{
 		
 		
 		generatePieces();
+		loadImages();
 		MouseListner();
 	}
 	
@@ -86,7 +93,7 @@ public abstract class GamePanel extends JPanel{
 			for(int j=0 ; j<piecesBoard[i].length;j++) {
 				if(piecesBoard[i][j]==null) continue;
 				else {
-					g.drawImage(piecesBoard[i][j].img,  i*SQUARE_SIZE,
+					g.drawImage(imgTable[piecesBoard[i][j].imgSrc],  i*SQUARE_SIZE,
 							j*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE , null);
 				}
 			}
@@ -159,6 +166,35 @@ public abstract class GamePanel extends JPanel{
 		piecesBoard[4][7] = new King(SideColor.WHITE, 4, 7);
 		piecesBoard[4][0] = new King(SideColor.BLACK, 4, 0);
 		
+	}
+	
+	public void loadImages() {
+		try {
+			String source= "/chess/resources/64/";
+			imgTable[0]  = ImageIO.read(getClass().getResource(source+"KgW.png"));
+			imgTable[6]  = ImageIO.read(getClass().getResource(source+"KgB.png"));
+			
+			imgTable[1]   = ImageIO.read(getClass().getResource(source+"QW.png"));
+			imgTable[7]  = ImageIO.read(getClass().getResource(source+"QB.png"));
+			
+			imgTable[2]  = ImageIO.read(getClass().getResource(source+"RW.png"));
+			imgTable[8]  = ImageIO.read(getClass().getResource(source+"RB.png"));
+			
+			imgTable[3]  = ImageIO.read(getClass().getResource(source+"BW.png"));
+			imgTable[9]  = ImageIO.read(getClass().getResource(source+"BB.png"));
+			
+			imgTable[4]  = ImageIO.read(getClass().getResource(source+"KtW.png"));
+			imgTable[10]  = ImageIO.read(getClass().getResource(source+"KtB.png"));
+			
+			imgTable[5]  = ImageIO.read(getClass().getResource(source+"PW.png"));
+			imgTable[11]  = ImageIO.read(getClass().getResource(source+"PB.png"));
+		}
+		catch(IOException e)
+		{
+			System.err.println("Error");
+			e.printStackTrace();
+		}
+
 	}
 
 
@@ -235,7 +271,7 @@ public abstract class GamePanel extends JPanel{
 	}
 	
 	public void castling(Position newPosition ,Chessman piece) {
-		if(piece.pos.x + newPosition.x == 6) {
+		if(newPosition.x == 2) {
 
 			Position rookNewposition = new Position(newPosition.x+1,newPosition.y);
 			Position rookOldposition = new Position(0,newPosition.y);
@@ -249,7 +285,7 @@ public abstract class GamePanel extends JPanel{
 				}
 			}
 		}
-		else if(piece.pos.x + newPosition.x == 10) {
+		else if(newPosition.x == 6) {
 			Position rookNewposition = new Position(newPosition.x-1,newPosition.y);
 			Position rookOldposition = new Position(7,newPosition.y);
 			if(piecesBoard[rookOldposition.x][rookOldposition.y].notMoved == true){				
@@ -270,7 +306,7 @@ public abstract class GamePanel extends JPanel{
 		lastMove.add(newPosition);
 		Chessman piece = piecesBoard[oldPosition.x][oldPosition.y];
 		
-		if(piece instanceof King) {				
+		if(piece instanceof King && piece.notMoved) {				
 			castling(newPosition ,piece);
 		}
 		else if(piece instanceof Pawn) {
