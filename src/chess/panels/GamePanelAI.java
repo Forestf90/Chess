@@ -41,6 +41,7 @@ public class GamePanelAI extends GamePanel{
 	}
 	@Override
 	void oponentTurn() {
+		if(endGame) return;
 		enabled= false;
 		newAI(playerAI);
 		enabled= true;	
