@@ -14,6 +14,13 @@ public class Bishop extends Chessman {
 		loadImage();
 		
 	}
+	
+	public void loadImage() {
+		if(this.color==SideColor.WHITE) {
+			imgSrc=3;
+		}else imgSrc=9;
+	}
+	
 	public ArrayList<Position> GetMoves(Chessman[][] board) {
 		
 		ArrayList<Position> moves = new ArrayList<Position>(); ;

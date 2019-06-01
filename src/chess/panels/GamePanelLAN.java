@@ -1,31 +1,22 @@
 package chess.panels;
 
 import java.io.IOException;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.concurrent.Semaphore;
 
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SpringLayout;
-import javax.swing.SwingUtilities;
+
 
 import chess.GameFrame;
-import chess.Menu;
 import chess.Position;
-import chess.SideColor;
-import chess.pieces.Chessman;
+
 
 public class GamePanelLAN extends GamePanel {
 

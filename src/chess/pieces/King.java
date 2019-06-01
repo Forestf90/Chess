@@ -15,7 +15,11 @@ public class King extends Chessman {
 		loadImage();
 
 	}
-
+	public void loadImage() {
+		if(this.color==SideColor.WHITE) {
+			imgSrc=0;
+		}else imgSrc=6;
+	}
 	public ArrayList<Position> GetMoves(Chessman[][] board) {
 
 		ArrayList<Position> moves = new ArrayList<Position>();

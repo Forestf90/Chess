@@ -16,6 +16,12 @@ public class Pawn extends Chessman {
 		loadImage();
 	}
 	
+	public void loadImage() {
+		if(this.color==SideColor.WHITE) {
+			imgSrc=5;
+		}else imgSrc=11;
+	}
+	
 	public ArrayList<Position> GetMoves(Chessman[][] board) {
 		
 		ArrayList<Position> moves = new ArrayList<Position>(); ;

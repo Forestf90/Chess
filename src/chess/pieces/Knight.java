@@ -14,6 +14,12 @@ public class Knight extends Chessman {
 		loadImage();
 		
 	}
+	
+	public void loadImage() {
+		if(this.color==SideColor.WHITE) {
+			imgSrc=4;
+		}else imgSrc=10;
+	}
 	public ArrayList<Position> GetMoves(Chessman[][] board) {
 		
 		ArrayList<Position> moves = new ArrayList<Position>(); ;

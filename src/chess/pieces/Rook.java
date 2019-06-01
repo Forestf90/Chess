@@ -17,7 +17,13 @@ public class Rook extends Chessman {
 		
 		
 	}
-public ArrayList<Position> GetMoves(Chessman[][] board) {
+	
+	public void loadImage() {
+		if(this.color==SideColor.WHITE) {
+			imgSrc=2;
+		}else imgSrc=8;
+	}
+	public ArrayList<Position> GetMoves(Chessman[][] board) {
 		
 		ArrayList<Position> moves = new ArrayList<Position>(); ;
 		
