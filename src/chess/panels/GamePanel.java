@@ -270,16 +270,16 @@ public abstract class GamePanel extends JPanel{
 
 	}
 	
-	public void castling(Position newPosition ,Chessman piece) {
+	public void castling(Position newPosition ,Chessman piece, Chessman board[][]) {
 		if(newPosition.x == 2) {
 
 			Position rookNewposition = new Position(newPosition.x+1,newPosition.y);
 			Position rookOldposition = new Position(0,newPosition.y);
-			if(piecesBoard[rookOldposition.x][rookOldposition.y].notMoved ){				
-				if(piecesBoard[piece.pos.x][piece.pos.y].notMoved){
-					Chessman rook = piecesBoard[rookOldposition.x][rookOldposition.y];
-					piecesBoard[rookNewposition.x][rookNewposition.y]=rook;
-					piecesBoard[rookOldposition.x][rookOldposition.y] =null;
+			if(board[rookOldposition.x][rookOldposition.y].notMoved ){				
+				if(board[piece.pos.x][piece.pos.y].notMoved){
+					Chessman rook = board[rookOldposition.x][rookOldposition.y];
+					board[rookNewposition.x][rookNewposition.y]=rook;
+					board[rookOldposition.x][rookOldposition.y] =null;
 					rook.pos=rookNewposition;
 					rook.notMoved = false;
 				}
@@ -288,11 +288,11 @@ public abstract class GamePanel extends JPanel{
 		else if(newPosition.x == 6) {
 			Position rookNewposition = new Position(newPosition.x-1,newPosition.y);
 			Position rookOldposition = new Position(7,newPosition.y);
-			if(piecesBoard[rookOldposition.x][rookOldposition.y].notMoved == true){				
-				if(piecesBoard[piece.pos.x][piece.pos.y].notMoved == true){
-					Chessman rook = piecesBoard[rookOldposition.x][rookOldposition.y];
-					piecesBoard[rookNewposition.x][rookNewposition.y]=rook;
-					piecesBoard[rookOldposition.x][rookOldposition.y] =null;
+			if(board[rookOldposition.x][rookOldposition.y].notMoved == true){				
+				if(board[piece.pos.x][piece.pos.y].notMoved == true){
+					Chessman rook = board[rookOldposition.x][rookOldposition.y];
+					board[rookNewposition.x][rookNewposition.y]=rook;
+					board[rookOldposition.x][rookOldposition.y] =null;
 					rook.pos=rookNewposition;
 					rook.notMoved = false;
 				}
@@ -307,7 +307,7 @@ public abstract class GamePanel extends JPanel{
 		Chessman piece = piecesBoard[oldPosition.x][oldPosition.y];
 		
 		if(piece instanceof King && piece.notMoved) {				
-			castling(newPosition ,piece);
+			castling(newPosition ,piece, piecesBoard);
 		}
 		else if(piece instanceof Pawn) {
 			((Pawn) piece).startPosition=false;
