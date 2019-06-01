@@ -270,7 +270,7 @@ public abstract class GamePanel extends JPanel{
 
 	}
 	
-	public void castling(Position newPosition ,Chessman piece, Chessman board[][]) {
+	public static void castling(Position newPosition ,Chessman piece, Chessman board[][]) {
 		if(newPosition.x == 2) {
 
 			Position rookNewposition = new Position(newPosition.x+1,newPosition.y);
