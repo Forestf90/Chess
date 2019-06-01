@@ -44,18 +44,10 @@ public class GamePanelLAN extends GamePanel {
 	
 	public void getSocketIP() {
 		JPanel p = new JPanel();
-		  //JTextField IPInput = new JTextField(10);
-		//ArrayList<String> hosts = findHosts();
-		ArrayList<String> hosts= new ArrayList<String>() {{
-			add("127.0.0.1");
-		}};
-		  //String[] ipList = {"127.0.0.1"}; 
-		  JComboBox IPInput = new JComboBox(hosts.toArray());
-		  IPInput.setEditable(true);
-		  
+		  JTextField IPInput = new JTextField(10);
 		  JTextField PortInput = new JTextField(10);
 		  PortInput.setText("1234");
-		 // IPInput.setText("127.0.0.1");
+		  IPInput.setText("127.0.0.1");
 
 		  p.add(new JLabel("IP :"));
 		  p.add(IPInput);
@@ -64,60 +56,27 @@ public class GamePanelLAN extends GamePanel {
 		  int resp=JOptionPane.showConfirmDialog(null, p, "Connection", JOptionPane.DEFAULT_OPTION);
 		  if(resp==0) {
 			  try {
-				  if(IPInput.getSelectedItem().toString().isEmpty() || PortInput.getText().isEmpty()) {
+				  if (PortInput.getText().isEmpty()) {
 					  throw new UnknownHostException("Inputs cannot be empty");
 				  }
-					InetAddress ipAdd=InetAddress.getByName(IPInput.getSelectedItem().toString());
+					InetAddress ipAdd=InetAddress.getByName(IPInput.getText());
 					int port = Integer.parseInt(PortInput.getText());
-//					socket =new Socket(ipAdd , port);
 					connect(ipAdd , port);
 				
 			} catch (Exception e) {
 				int input = JOptionPane.showConfirmDialog(null, 
 		                "Input data is not valid !", "Error", JOptionPane.DEFAULT_OPTION , JOptionPane.ERROR_MESSAGE);
-				//e.printStackTrace();
 				getSocketIP();
 			}
 		  }
 		  else {
-			  //new Menu();
 			  GameFrame gf =((GameFrame) this.getParent());
 			  gf.setVisible(false);
 		      gf.dispose();
 		  }
 	}
 	
-	public ArrayList<String> findHosts(){
-		InetAddress localhost = null ;
-		ArrayList<String> hosts = new ArrayList<String>();
-		try {
-			localhost = InetAddress.getByAddress(new byte[]{(byte)10 ,(byte)0 ,(byte)1 ,(byte)0});
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		byte[] ip = localhost.getAddress();
-		InetAddress address = null;
-		for (int i = 1; i <= 254; i++)
-		{
-			ip[3] = (byte)i;
-			try {
-				address = InetAddress.getByAddress(ip);
-			} catch (UnknownHostException e) {
 
-				e.printStackTrace();
-			}
-			try {
-				boolean reachable =address.isReachable(1000);
-				if (reachable)
-				{
-					hosts.add(address.toString().substring(1));
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return hosts;
-	}
 	
 	public void connect(InetAddress ipAdd , int port) {
 		try {
@@ -132,7 +91,6 @@ public class GamePanelLAN extends GamePanel {
 			
 		} catch (IOException e) {
 			createServer(port);
-			//e.printStackTrace();
 		}
 	}
 	
