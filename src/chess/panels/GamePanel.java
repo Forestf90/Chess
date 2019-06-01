@@ -269,7 +269,7 @@ public abstract class GamePanel extends JPanel{
 	
 	}
 	public void castling(Position newPosition ,Chessman piece) {
-		if(piece.pos.x + newPosition.x == 6) {
+		if(newPosition.x == 2) {
 
 			Position rookNewposition = new Position(newPosition.x+1,newPosition.y);
 			Position rookOldposition = new Position(0,newPosition.y);
@@ -283,7 +283,7 @@ public abstract class GamePanel extends JPanel{
 				}
 			}
 		}
-		else if(piece.pos.x + newPosition.x == 10) {
+		else if(newPosition.x == 6) {
 			Position rookNewposition = new Position(newPosition.x-1,newPosition.y);
 			Position rookOldposition = new Position(7,newPosition.y);
 			if(piecesBoard[rookOldposition.x][rookOldposition.y].notMoved == true){				
@@ -304,7 +304,7 @@ public abstract class GamePanel extends JPanel{
 		lastMove.add(newPosition);
 		Chessman piece = piecesBoard[oldPosition.x][oldPosition.y];
 		
-		if(piece instanceof King) {				
+		if(piece instanceof King && piece.notMoved) {				
 			castling(newPosition ,piece);
 		}
 		else if(piece instanceof Pawn) {
