@@ -98,7 +98,6 @@ public class GamePanelLAN extends GamePanel {
 						enabled=true;
 
 					} catch ( ClassNotFoundException | IOException  e) {
-						//e.printStackTrace();
 						if(endGame) return;
 						JOptionPane.showConfirmDialog(null, 
 				                "Connection is lost. The game is over", "Disconection",

@@ -14,6 +14,7 @@ public abstract class Chessman {
 	public SideColor color;
 	public boolean notMoved;
 	public Position pos;
+	public int Value;
 	
 	public short imgSrc;
 	

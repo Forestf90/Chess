@@ -1,23 +1,21 @@
 package chess.panels;
-
 import java.util.ArrayList;
-
 import java.util.Random;
 
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
-import chess.Menu;
+import chess.Move;
 import chess.Position;
 import chess.SideColor;
-import chess.pieces.Chessman;
 
-import javax.swing.JOptionPane;
+
+
+import chess.AI;
 
 public class GamePanelAI extends GamePanel{
 
 	
-	public boolean playerWhite;
+	public SideColor playerAI;
 	
 	public GamePanelAI() {
 		chooseColor();
@@ -28,40 +26,25 @@ public class GamePanelAI extends GamePanel{
 				JOptionPane.YES_NO_OPTION ,JOptionPane.INFORMATION_MESSAGE,null,options, options[0]);
 				
 		if (response == 0) {
-			playerWhite = true;  
+			playerAI = SideColor.BLACK;  
 			whiteMove^=false;
 	    } 
-		if (response == 1) {
-	        playerWhite = false; 
+		else if (response == 1) {
+			playerAI = SideColor.WHITE; 
 	        whiteMove^=true;
+	        oponentTurn();
 	    } 
-	    else  {    	
-	        //SwingUtilities.windowForComponent(this).dispose();
-	    }
+
 
 	}
 	@Override
 	void oponentTurn() {
-		if(playerWhite==true) {
-			AIBlackTurn();
-		}
-		if(playerWhite==false) {
-			AIWhiteTurn();			
-		}		
+		if(endGame) return;
+		enabled= false;
+		newAI(playerAI);
+		enabled= true;	
 	}
 	
-	void AIBlackTurn() {
-		enabled= false;
-		AI(SideColor.BLACK);
-		enabled= true;
-		}
-	
-	void AIWhiteTurn() {
-		
-		enabled= false;
-		AI(SideColor.WHITE);
-		enabled= true;		
-	}
 	
 	public static int getRandom(int[] array) {
 	    int rnd = new Random().nextInt(array.length);
@@ -77,12 +60,11 @@ public class GamePanelAI extends GamePanel{
 		Position oldposition = new Position(0,0);;
 		int max = 0;
 		int random = 0;
-		//czym sie rusze
+
 		for(int i = 0; i <=7; i++){
 			for(int j = 0; j <=7; j++) {
 				if(piecesBoard[i][j] != null){				
 					if(piecesBoard[i][j].color == col){
-						//zmien na preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard ,piecesBoard[i][j])
 						if(preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard ,piecesBoard[i][j]).size() >0)
 						{			
 							random = new Random().nextInt(100);
@@ -91,8 +73,6 @@ public class GamePanelAI extends GamePanel{
 								max = random;
 								oldposition.x = i;
 								oldposition.y = j;
-								//to
-								//no i tutaj tez jak w tym ife
 								pieceMoves = preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard ,piecesBoard[i][j]);
 								random = new Random().nextInt(preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard ,piecesBoard[i][j]).size());
 								newposition = pieceMoves.get(random);									
@@ -104,5 +84,24 @@ public class GamePanelAI extends GamePanel{
 		}		
 		moveChessman(newposition,oldposition);							
 	}
+	
+	
+	public void newAI(SideColor col)
+	{
+		
+		Move move = AI.minMax(piecesBoard, col, -100000, +100000);
+		if(move!= null) {
+		moveChessman(move.end, move.start );
+		}
+		else
+			AI(col);
+
+	}
+		
+	
+	
+	
+	
+	
 	
 }
