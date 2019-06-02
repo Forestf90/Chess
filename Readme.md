@@ -1,8 +1,7 @@
 # Chess
-Chess game implementation in java.
 Chess is strategy board game played on a checkered board with 64 squares arranged in an 8x8 grid
 
-![](https://i.imgur.com/UyUYqSX.png)
+![](src/chess/resources/screen1.png)
 
 White is starting game.
 Each piece has its own way of moving. Clicking the left mouse button shows the available movements.
@@ -17,14 +16,14 @@ The game interface is made in Java Swing
 ## Game modes
 Game has 3 modes
 
-![](https://i.imgur.com/qEY2FFv.png)
+![](src/chess/resources/screen2.png)
 
 
 ### HotSeat
 HotSeat is similar to normal chess, in this mode two players can try who is better
 
 ### Multiplayer
-![](https://i.imgur.com/QOU3jZh.png)
+![](src/chess/resources/screen3.png)
 
 Multiplayer is mode for two players on different devices. Both devices must be in same network. 
 For this mode check your firewall configuration.
@@ -35,5 +34,5 @@ AI is a single player mode in which we will face an opponent. Artificial intelli
 ## About
 This game was made by 2 students, as a team project.
 
-* Micha³ Œliwa (Forestf90)
+* Michal Sliwa (Forestf90)
 * Krzysztof Heller
