@@ -1,6 +1,5 @@
 package chess;
 
-import chess.pieces.Chessman;
 
 public class Move {
 
@@ -11,5 +10,4 @@ public class Move {
 		end=koncowa;
 	}
 	
-	Chessman piece;
 }

@@ -158,8 +158,6 @@ public class King extends Chessman {
 			}			
 		}
 		
-		//board[pos.x+pom][pos.y].notMoved == true
-		
 		return moves;
 
 	}

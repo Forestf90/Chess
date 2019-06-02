@@ -122,7 +122,6 @@ public class AI {
 			score += move;
 						
 			moveChessmanAI(p.start, p.end, tempBoard);
-			//tempBoard=null;
 			if(score < bestscore)
 				bestscore = score;			
 			if(bestscore < alpha)

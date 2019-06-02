@@ -31,8 +31,7 @@ public class Bishop extends Chessman {
 		while(this.pos.x+i <= 7 && this.pos.y-i >=0 ) {
 		
 			if(board[pos.x+i][pos.y-i] == null){
-				moves.add(new Position(this.pos.x+i ,this.pos.y-i));
-								
+				moves.add(new Position(this.pos.x+i ,this.pos.y-i));				
 			}
 			
 			if(board[pos.x+i][pos.y-i] != null) {							
@@ -51,8 +50,7 @@ public class Bishop extends Chessman {
 		while(this.pos.x-i >= 0 && this.pos.y-i >=0 ) {
 
 			if(board[pos.x-i][pos.y-i] == null){
-				moves.add(new Position(this.pos.x-i ,this.pos.y-i));
-								
+				moves.add(new Position(this.pos.x-i ,this.pos.y-i));				
 			}
 			
 			if(board[pos.x-i][pos.y-i] != null) {							
@@ -71,8 +69,7 @@ public class Bishop extends Chessman {
 		while(this.pos.x+i <= 7 && this.pos.y+i <=7 ) {
 			
 			if(board[pos.x+i][pos.y+i] == null){
-				moves.add(new Position(this.pos.x+i ,this.pos.y+i));
-								
+				moves.add(new Position(this.pos.x+i ,this.pos.y+i));				
 			}
 			
 			if(board[pos.x+i][pos.y+i] != null) {							
