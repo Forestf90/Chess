@@ -13,7 +13,7 @@ import java.util.List;
 
 public class AI {
     static int currentDepth;
-    static int maxDepth = 2;
+    static int maxDepth = 4;
 
     public static Move minMax(Chessman[][] board, SideColor col, int alpha, int beta) {
         int bestScore = alpha;
@@ -67,7 +67,7 @@ public class AI {
     }
 
     public static int max(int depth, SideColor col, Chessman[][] board, int alpha, int beta) {
-        ArrayList<Move> allMoves = getAIMoves(col.swapColor(), board);
+        ArrayList<Move> allMoves = getAIMoves(col, board);
         if (depth == maxDepth || allMoves.size() == 0) {
             return 0;
         }
