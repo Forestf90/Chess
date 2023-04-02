@@ -1,11 +1,10 @@
 package chess.panels;
 
-public class GamePanelHot extends GamePanel{
+public class GamePanelHot extends GamePanel {
 
-	@Override
-	void oponentTurn() {
-		whiteMove^=true;
-		
-	}
+    @Override
+    void oponentTurn() {
+        whiteMove ^= true;
 
+    }
 }
