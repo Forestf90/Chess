@@ -10,18 +10,25 @@ public class Queen extends Chessman {
     public Queen(SideColor col, int x, int y) {
         color = col;
         pos = new Position(x, y);
-        Value = 1000;
+        value = 1000;
         loadImage();
 
     }
 
-    public void loadImage() {
+    @Override
+    public Chessman copy(Chessman other) {
+        return new Queen(color, pos.x, pos.y);
+    }
+
+    @Override
+    protected void loadImage() {
         if (this.color == SideColor.WHITE) {
             imgSrc = 1;
         } else imgSrc = 7;
     }
 
-    public ArrayList<Position> GetMoves(Chessman[][] board) {
+    @Override
+    public ArrayList<Position> getMoves(Chessman[][] board) {
 
         ArrayList<Position> moves = new ArrayList<Position>();
 
@@ -126,7 +133,7 @@ public class Queen extends Chessman {
             i++;
         }
 
-		//NW
+        //NW
         i = 1;
         while (this.pos.x - i >= 0 && this.pos.y - i >= 0) {
 

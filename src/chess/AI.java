@@ -15,18 +15,20 @@ public class AI {
     static int currentDepth;
     static int maxDepth = 4;
 
-    public static Move minMax(Chessman[][] board, SideColor col, int alpha, int beta) {
+    public static Move minMax(Chessman[][] board, SideColor aiCol, int alpha, int beta) {
         int bestScore = alpha;
         int bestID = 0;
         int move, score;
         int i = 0;
-        List<Move> allMoves = getAIMoves(col, board);
+        List<Move> allMoves = getAIMoves(aiCol, board);
         Collections.shuffle(allMoves);
-        Chessman[][] tempBoard = Arrays.stream(board).map(Chessman[]::clone).toArray(Chessman[][]::new);
+        Chessman[][] tempBoard = Arrays.stream(board).map(arr -> Arrays.stream(arr).map(chess -> chess == null ? null : chess.copy(chess))
+                .toArray(Chessman[]::new)).toArray(Chessman[][]::new);
+
         for (Move p : allMoves) {
-            score = getScore(tempBoard, p.end);
+            score = getScore(aiCol, tempBoard);
             moveChessmanAI(p.end, p.start, tempBoard);
-            move = min(currentDepth + 1, col.swapColor(), tempBoard, alpha, beta);
+            move = min(currentDepth + 1, aiCol, aiCol.swapColor(), tempBoard, alpha, beta);
             score += move;
             moveChessmanAI(p.start, p.end, tempBoard);
             if (score > bestScore) {
@@ -38,23 +40,23 @@ public class AI {
         return allMoves.get(bestID);
     }
 
-    public static int min(int depth, SideColor col, Chessman[][] board, int alpha, int beta) {
-        ArrayList<Move> allMoves = getAIMoves(col, board);
+    public static int min(int depth, SideColor aiCol, SideColor turnCol, Chessman[][] board, int alpha, int beta) {
+        ArrayList<Move> allMoves = getAIMoves(turnCol, board);
         if (depth == maxDepth || allMoves.size() == 0) {
-            return 0;
+            return getScore(aiCol, board);
         }
         int move;
-        int score;
+        //int score;
         int bestScore = beta;
         Chessman[][] tempBoard = Arrays.stream(board).map(Chessman[]::clone).toArray(Chessman[][]::new);
         for (Move p : allMoves) {
-            score = -getScore(tempBoard, p.end);
+            //score = -getScore(aiCol, tempBoard);
             moveChessmanAI(p.end, p.start, tempBoard);
-            move = max(depth + 1, col.swapColor(), tempBoard, alpha, beta);
-            score += move;
+            move = max(depth + 1, aiCol, turnCol.swapColor(), tempBoard, alpha, beta);
+            //score += move;
             moveChessmanAI(p.start, p.end, tempBoard);
-            if (score < bestScore) {
-                bestScore = score;
+            if (move < bestScore) {
+                bestScore = move;
             }
             if (bestScore < alpha) {
                 return bestScore;
@@ -66,19 +68,19 @@ public class AI {
         return bestScore;
     }
 
-    public static int max(int depth, SideColor col, Chessman[][] board, int alpha, int beta) {
-        ArrayList<Move> allMoves = getAIMoves(col, board);
+    public static int max(int depth, SideColor aiCol, SideColor turnCol, Chessman[][] board, int alpha, int beta) {
+        ArrayList<Move> allMoves = getAIMoves(turnCol, board);
         if (depth == maxDepth || allMoves.size() == 0) {
-            return 0;
+            return getScore(aiCol, board);
         }
         int move;
         int score;
         int bestScore = alpha;
         Chessman[][] tempBoard = Arrays.stream(board).map(Chessman[]::clone).toArray(Chessman[][]::new);
         for (Move p : allMoves) {
-            score = getScore(tempBoard, p.end);
+            score = getScore(turnCol, tempBoard);
             moveChessmanAI(p.end, p.start, tempBoard);
-            move = min(depth + 1, col.swapColor(), tempBoard, alpha, beta);
+            move = min(depth + 1, aiCol, turnCol.swapColor(), tempBoard, alpha, beta);
             score += move;
             moveChessmanAI(p.start, p.end, tempBoard);
             if (score > bestScore) {
@@ -94,9 +96,20 @@ public class AI {
         return bestScore;
     }
 
-    public static int getScore(Chessman[][] board, Position newPosition) {
-        return board[newPosition.x][newPosition.y] == null ? 0 : board[newPosition.x][newPosition.y].Value;
+    public static int getScore(SideColor col, Chessman[][] board) {
+        int result = 0;
+        for (int i = 0; i <= 7; i++) {
+            for (int j = 0; j <= 7; j++) {
+                if (board[i][j] != null) {
+                    if (board[i][j].color == col) {
+                            result += board[i][j].value;
+                        }
+                    }
+                }
+            }
+        return result;
     }
+
 
     public static void moveChessmanAI(Position newPosition, Position oldPosition, Chessman[][] board) {
         Chessman piece = board[oldPosition.x][oldPosition.y];
@@ -122,7 +135,7 @@ public class AI {
             for (int j = 0; j <= 7; j++) {
                 if (board[i][j] != null) {
                     if (board[i][j].color == col) {
-                        ArrayList<Position> allMoves = new ArrayList<>(GamePanel.preventCheck(board[i][j].GetMoves(board), board, board[i][j]));
+                        ArrayList<Position> allMoves = new ArrayList<>(GamePanel.preventCheck(board[i][j].getMoves(board), board, board[i][j]));
                         for (Position p : allMoves) {
                             moves.add(new Move(board[i][j].pos, p));
                         }

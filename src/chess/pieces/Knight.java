@@ -10,18 +10,25 @@ public class Knight extends Chessman {
     public Knight(SideColor col, int x, int y) {
         color = col;
         pos = new Position(x, y);
-        Value = 350;
+        value = 350;
         loadImage();
 
     }
 
-    public void loadImage() {
+    @Override
+    public Chessman copy(Chessman other) {
+        return new Knight(color, pos.x, pos.y);
+    }
+
+    @Override
+    protected void loadImage() {
         if (this.color == SideColor.WHITE) {
             imgSrc = 4;
         } else imgSrc = 10;
     }
 
-    public ArrayList<Position> GetMoves(Chessman[][] board) {
+    @Override
+    public ArrayList<Position> getMoves(Chessman[][] board) {
 
         ArrayList<Position> moves = new ArrayList<Position>();
 

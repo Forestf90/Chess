@@ -12,18 +12,25 @@ public class Rook extends Chessman {
         color = col;
         pos = new Position(x, y);
         notMoved = true;
-        Value = 525;
+        value = 525;
         loadImage();
 
     }
 
-    public void loadImage() {
+    @Override
+    public Chessman copy(Chessman other) {
+        return new Rook(color, pos.x, pos.y);
+    }
+
+    @Override
+    protected void loadImage() {
         if (this.color == SideColor.WHITE) {
             imgSrc = 2;
         } else imgSrc = 8;
     }
 
-    public ArrayList<Position> GetMoves(Chessman[][] board) {
+    @Override
+    public ArrayList<Position> getMoves(Chessman[][] board) {
 
         ArrayList<Position> moves = new ArrayList<Position>();
 

@@ -23,7 +23,7 @@ class PreventCheckTest {
         Bishop bishop = new Bishop(SideColor.WHITE, 5, 1);
         board[5][1] = bishop;
 
-        assertTrue(GamePanel.preventCheck(bishop.GetMoves(board), board, bishop).isEmpty());
+        assertTrue(GamePanel.preventCheck(bishop.getMoves(board), board, bishop).isEmpty());
     }
 
     @Test
@@ -35,9 +35,9 @@ class PreventCheckTest {
         Bishop bishop = new Bishop(SideColor.WHITE, 6, 0);
         board[6][0] = bishop;
 
-        assertTrue(GamePanel.preventCheck(bishop.GetMoves(board), board, bishop).size() == 1);
+        assertTrue(GamePanel.preventCheck(bishop.getMoves(board), board, bishop).size() == 1);
 
-        Position temp = GamePanel.preventCheck(bishop.GetMoves(board), board, bishop).get(0);
+        Position temp = GamePanel.preventCheck(bishop.getMoves(board), board, bishop).get(0);
         assertTrue(temp.x == 5 && temp.y == 1);
     }
 
@@ -51,7 +51,7 @@ class PreventCheckTest {
         Bishop bishop = new Bishop(SideColor.WHITE, 6, 0);
         board[6][0] = bishop;
 
-        ArrayList<Position> temp = bishop.GetMoves(board);
+        ArrayList<Position> temp = bishop.getMoves(board);
         assertSame(temp, GamePanel.preventCheck(temp, board, bishop));
     }
 

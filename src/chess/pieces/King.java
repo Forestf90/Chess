@@ -12,18 +12,25 @@ public class King extends Chessman {
         color = col;
         pos = new Position(x, y);
         notMoved = true;
-        Value = 10000;
+        value = 10000;
         loadImage();
 
     }
 
-    public void loadImage() {
+    @Override
+    public Chessman copy(Chessman other) {
+        return new King(color, pos.x, pos.y);
+    }
+
+    @Override
+    protected void loadImage() {
         if (this.color == SideColor.WHITE) {
             imgSrc = 0;
         } else imgSrc = 6;
     }
 
-    public ArrayList<Position> GetMoves(Chessman[][] board) {
+    @Override
+    public ArrayList<Position> getMoves(Chessman[][] board) {
 
         ArrayList<Position> moves = new ArrayList<Position>();
 

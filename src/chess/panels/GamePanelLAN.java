@@ -68,7 +68,7 @@ public class GamePanelLAN extends GamePanel {
             JOptionPane.showConfirmDialog(null,
                     "You play as Blacks", "Connected !", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
             whiteMove = false;
-            oponentTurn();
+            opponentTurn();
             createReciver();
 
         } catch (IOException e) {
@@ -107,7 +107,6 @@ public class GamePanelLAN extends GamePanel {
 
         try {
             serverSocket = new ServerSocket(port);
-            ;
             Socket s = serverSocket.accept();
             oos = new ObjectOutputStream(s.getOutputStream());
             ois = new ObjectInputStream(s.getInputStream());
@@ -127,7 +126,7 @@ public class GamePanelLAN extends GamePanel {
             oos.flush();
             oos.writeObject(newPosition);
             oos.flush();
-            oponentTurn();
+            opponentTurn();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -173,7 +172,7 @@ public class GamePanelLAN extends GamePanel {
 
 
     @Override
-    void oponentTurn() {
+    void opponentTurn() {
         enabled = false;
     }
 

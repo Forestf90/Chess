@@ -19,12 +19,12 @@ import java.util.Iterator;
 
 public abstract class GamePanel extends JPanel {
 
-    private final BufferedImage boardImg;
-    public int SQUARE_SIZE = 64;
-    ArrayList<Position> possibleMoves;
-    ArrayList<Position> lastMove;
-    Position checkPosition;
-    Chessman selected;
+    private final BufferedImage _boardImg;
+    private final int SQUARE_SIZE = 64;
+    private ArrayList<Position> _possibleMoves;
+    private final ArrayList<Position> _lastMove;
+    private Position _checkPosition;
+    private Chessman _selected;
 
     boolean endGame = false;
     protected Position focus;
@@ -36,17 +36,17 @@ public abstract class GamePanel extends JPanel {
     public boolean enabled;
 
 
-    abstract void oponentTurn();
+    abstract void opponentTurn();
 
     public GamePanel() {
-        boardImg = new BufferedImage(8 * SQUARE_SIZE, 8 * SQUARE_SIZE, BufferedImage.TYPE_INT_ARGB);
+        _boardImg = new BufferedImage(8 * SQUARE_SIZE, 8 * SQUARE_SIZE, BufferedImage.TYPE_INT_ARGB);
         drawBoard();
         this.setPreferredSize(new Dimension(8 * SQUARE_SIZE, 8 * SQUARE_SIZE));
 
         piecesBoard = new Chessman[8][8];
         imgTable = new BufferedImage[12];
-        possibleMoves = new ArrayList<Position>();
-        lastMove = new ArrayList<Position>();
+        _possibleMoves = new ArrayList<Position>();
+        _lastMove = new ArrayList<Position>();
         focus = new Position(0, 0);
         whiteMove = true;
         enabled = true;
@@ -60,15 +60,15 @@ public abstract class GamePanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.drawImage(boardImg, 0, 0, 8 * SQUARE_SIZE, 8 * SQUARE_SIZE, null);
+        g.drawImage(_boardImg, 0, 0, 8 * SQUARE_SIZE, 8 * SQUARE_SIZE, null);
 
-        for (Position lm : lastMove) {
+        for (Position lm : _lastMove) {
             g.setColor(new Color(0, 102, 102, 128));
             g.fillRect(lm.x * SQUARE_SIZE, lm.y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
         }
-        if (checkPosition != null) {
+        if (_checkPosition != null) {
             g.setColor(new Color(255, 0, 0, 128));
-            g.fillRect(checkPosition.x * SQUARE_SIZE, checkPosition.y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
+            g.fillRect(_checkPosition.x * SQUARE_SIZE, _checkPosition.y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
         }
 
 
@@ -83,14 +83,14 @@ public abstract class GamePanel extends JPanel {
             }
         }
         g.setColor(new Color(0, 255, 0, 192));
-        if (selected != null) {
+        if (_selected != null) {
             ((Graphics2D) g).setStroke(new BasicStroke(4));
-            g.drawRect(selected.pos.x * SQUARE_SIZE + 2, selected.pos.y * SQUARE_SIZE + 2, SQUARE_SIZE - 4, SQUARE_SIZE - 4);
+            g.drawRect(_selected.pos.x * SQUARE_SIZE + 2, _selected.pos.y * SQUARE_SIZE + 2, SQUARE_SIZE - 4, SQUARE_SIZE - 4);
         }
 
-        for (Position ch : possibleMoves) {
+        for (Position ch : _possibleMoves) {
             if (piecesBoard[ch.x][ch.y] != null) {
-                if (piecesBoard[ch.x][ch.y].color != selected.color) {
+                if (piecesBoard[ch.x][ch.y].color != _selected.color) {
                     g.setColor(new Color(255, 0, 0, 192));
                     g.drawRect(ch.x * SQUARE_SIZE, ch.y * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE);
                 }
@@ -106,7 +106,7 @@ public abstract class GamePanel extends JPanel {
 
     private void drawBoard() {
 
-        Graphics2D g = (Graphics2D) boardImg.getGraphics();
+        Graphics2D g = (Graphics2D) _boardImg.getGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         g.setColor(Color.decode("#71292a"));
@@ -185,28 +185,28 @@ public abstract class GamePanel extends JPanel {
             public void mousePressed(MouseEvent me) {
                 int tempX = me.getX() / SQUARE_SIZE;
                 int tempY = me.getY() / SQUARE_SIZE;
-                if ((piecesBoard[tempX][tempY] == null && selected == null) || !enabled) return;
-                else if (selected == null) {
-                    selected = piecesBoard[tempX][tempY];
-                    if (selected.color == SideColor.WHITE && !whiteMove) {
-                        selected = null;
+                if ((piecesBoard[tempX][tempY] == null && _selected == null) || !enabled) return;
+                else if (_selected == null) {
+                    _selected = piecesBoard[tempX][tempY];
+                    if (_selected.color == SideColor.WHITE && !whiteMove) {
+                        _selected = null;
                         return;
-                    } else if (selected.color == SideColor.BLACK && whiteMove) {
-                        selected = null;
+                    } else if (_selected.color == SideColor.BLACK && whiteMove) {
+                        _selected = null;
                         return;
                     }
-                    possibleMoves = preventCheck(selected.GetMoves(piecesBoard), piecesBoard, selected);
+                    _possibleMoves = preventCheck(_selected.getMoves(piecesBoard), piecesBoard, _selected);
                     repaint();
                 } else {
-                    if (piecesBoard[tempX][tempY] != null && piecesBoard[tempX][tempY].color == selected.color) {
-                        selected = piecesBoard[tempX][tempY];
-                        possibleMoves = preventCheck(selected.GetMoves(piecesBoard), piecesBoard, selected);
+                    if (piecesBoard[tempX][tempY] != null && piecesBoard[tempX][tempY].color == _selected.color) {
+                        _selected = piecesBoard[tempX][tempY];
+                        _possibleMoves = preventCheck(_selected.getMoves(piecesBoard), piecesBoard, _selected);
                         repaint();
                     } else {
 
                         checkChessmanMove(new Position(tempX, tempY));
-                        selected = null;
-                        possibleMoves.clear();
+                        _selected = null;
+                        _possibleMoves.clear();
                         repaint();
                     }
 
@@ -234,7 +234,7 @@ public abstract class GamePanel extends JPanel {
     public void checkChessmanMove(Position newPosition) {
         boolean contains = false;
 
-        for (Position m : possibleMoves) {
+        for (Position m : _possibleMoves) {
 
             if (m.x == newPosition.x && m.y == newPosition.y) {
                 contains = true;
@@ -243,8 +243,8 @@ public abstract class GamePanel extends JPanel {
         }
 
         if (!contains) return;
-        moveChessman(newPosition, selected.pos);
-        oponentTurn();
+        moveChessman(newPosition, _selected.pos);
+        opponentTurn();
 
 
     }
@@ -279,9 +279,9 @@ public abstract class GamePanel extends JPanel {
     }
 
     public void moveChessman(Position newPosition, Position oldPosition) {
-        lastMove.clear();
-        lastMove.add(oldPosition);
-        lastMove.add(newPosition);
+        _lastMove.clear();
+        _lastMove.add(oldPosition);
+        _lastMove.add(newPosition);
         Chessman piece = piecesBoard[oldPosition.x][oldPosition.y];
 
         if (piece instanceof King && piece.notMoved) {
@@ -304,10 +304,10 @@ public abstract class GamePanel extends JPanel {
 
         boolean isCheck = check(piecesBoard, c);
         if (!isCheck) {
-            checkPosition = null;
+            _checkPosition = null;
             checkStalemate(piece.color.swapColor(), piecesBoard);
         } else {
-            checkPosition = findKing(piecesBoard, c);
+            _checkPosition = findKing(piecesBoard, c);
             checkmate(piece.color.swapColor(), piecesBoard);
         }
     }
@@ -319,7 +319,7 @@ public abstract class GamePanel extends JPanel {
         for (int i = 0; i <= 7; i++) {
             for (int j = 0; j <= 7; j++) {
                 if (board[i][j] != null) {
-                    if (board[i][j].color == col) moves.addAll(board[i][j].GetMoves(board));
+                    if (board[i][j].color == col) moves.addAll(board[i][j].getMoves(board));
                 }
             }
         }
@@ -333,7 +333,7 @@ public abstract class GamePanel extends JPanel {
             for (int j = 0; j <= 7; j++) {
                 if (board[i][j] != null) {
                     if (board[i][j].color == col)
-                        moves.addAll(preventCheck(board[i][j].GetMoves(board), board, board[i][j]));
+                        moves.addAll(preventCheck(board[i][j].getMoves(board), board, board[i][j]));
                 }
             }
         }
@@ -412,9 +412,9 @@ public abstract class GamePanel extends JPanel {
 
         if (any.isEmpty()) {
             endGame = true;
-            possibleMoves.clear();
+            _possibleMoves.clear();
             repaint();
-            JOptionPane.showMessageDialog(null, col.getBetterString() + " King is checkmate. " + col.swapColor().getBetterString() +
+            JOptionPane.showMessageDialog(null, col.getBetterString() + " King is checkmated. " + col.swapColor().getBetterString() +
                             "s wins. ",
                     "Checkmate", JOptionPane.INFORMATION_MESSAGE);
             closeFrame();
@@ -425,7 +425,7 @@ public abstract class GamePanel extends JPanel {
         ArrayList<Position> any = getAllSafeMoves(col, board);
 
         if (any.isEmpty()) {
-            possibleMoves.clear();
+            _possibleMoves.clear();
             repaint();
             JOptionPane.showMessageDialog(null, col.getBetterString() + "s have no more available moves. The game ends with a draw. ",
                     "Stalemate", JOptionPane.INFORMATION_MESSAGE);

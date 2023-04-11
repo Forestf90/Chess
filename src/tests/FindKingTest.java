@@ -8,7 +8,6 @@ import chess.pieces.Chessman;
 import chess.pieces.King;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FindKingTest {
@@ -23,7 +22,6 @@ class FindKingTest {
         assertTrue(p.x == 5 && p.y == 5);
 
     }
-
 
     @Test
     void findKingTest2() {

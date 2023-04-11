@@ -12,12 +12,12 @@ public abstract class Chessman {
     public SideColor color;
     public boolean notMoved;
     public Position pos;
-    public int Value;
-
+    public int value;
     public short imgSrc;
 
-    abstract void loadImage();
+    public abstract Chessman copy(Chessman other);
 
+    protected abstract void loadImage();
 
-    public abstract ArrayList<Position> GetMoves(Chessman[][] board);
+    public abstract ArrayList<Position> getMoves(Chessman[][] board);
 }

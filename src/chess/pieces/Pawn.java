@@ -13,17 +13,24 @@ public class Pawn extends Chessman {
     public Pawn(SideColor col, int x, int y) {
         color = col;
         pos = new Position(x, y);
-        Value = 100;
+        value = 100;
         loadImage();
     }
 
-    public void loadImage() {
+    @Override
+    public Chessman copy(Chessman other) {
+        return new Pawn(color, pos.x, pos.y);
+    }
+
+    @Override
+    protected void loadImage() {
         if (this.color == SideColor.WHITE) {
             imgSrc = 5;
         } else imgSrc = 11;
     }
 
-    public ArrayList<Position> GetMoves(Chessman[][] board) {
+    @Override
+    public ArrayList<Position> getMoves(Chessman[][] board) {
 
         ArrayList<Position> moves = new ArrayList<Position>();
 

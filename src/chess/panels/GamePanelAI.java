@@ -29,23 +29,28 @@ public class GamePanelAI extends GamePanel {
         } else if (response == 1) {
             playerAI = SideColor.WHITE;
             whiteMove ^= true;
-            oponentTurn();
+            opponentTurn();
         }
 
     }
 
     @Override
-    void oponentTurn() {
+    void opponentTurn() {
         if (endGame) return;
         enabled = false;
-        newAI(playerAI);
-        enabled = true;
+        Thread t = new Thread() {
+            public synchronized void run() {
+                makeAIMove(playerAI);
+                enabled = true;
+            }
+
+        };
+        t.start();
     }
 
-    void AI(SideColor col) {
+    void randomMove(SideColor col) {
 
         ArrayList<Position> pieceMoves;
-
 
         Position newposition = new Position(0, 0);
         Position oldposition = new Position(0, 0);
@@ -57,14 +62,14 @@ public class GamePanelAI extends GamePanel {
             for (int j = 0; j <= 7; j++) {
                 if (piecesBoard[i][j] != null) {
                     if (piecesBoard[i][j].color == col) {
-                        if (preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard, piecesBoard[i][j]).size() > 0) {
+                        if (preventCheck(piecesBoard[i][j].getMoves(piecesBoard), piecesBoard, piecesBoard[i][j]).size() > 0) {
                             random = new Random().nextInt(100);
                             if (random > max) {
                                 max = random;
                                 oldposition.x = i;
                                 oldposition.y = j;
-                                pieceMoves = preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard, piecesBoard[i][j]);
-                                random = new Random().nextInt(preventCheck(piecesBoard[i][j].GetMoves(piecesBoard), piecesBoard, piecesBoard[i][j]).size());
+                                pieceMoves = preventCheck(piecesBoard[i][j].getMoves(piecesBoard), piecesBoard, piecesBoard[i][j]);
+                                random = new Random().nextInt(preventCheck(piecesBoard[i][j].getMoves(piecesBoard), piecesBoard, piecesBoard[i][j]).size());
                                 newposition = pieceMoves.get(random);
                             }
                         }
@@ -76,13 +81,12 @@ public class GamePanelAI extends GamePanel {
     }
 
 
-    public void newAI(SideColor col) {
+    public void makeAIMove(SideColor col) {
 
         Move move = AI.minMax(piecesBoard, col, -100000, +100000);
         if (move != null) {
             moveChessman(move.end, move.start);
         } else
-            AI(col);
-
+            randomMove(col);
     }
 }
